@@ -1,124 +1,114 @@
-# Curtail-str
+# curtail-str
 
-Microbibliotecas puras para abreviar identificadores em Node.js, Python, Go e
-Java. Mesmas regras, tres modos explicitos, sem dicionarios de idiomas.
+Small, pure libraries for shortening identifiers in Node.js, Python, Go, and
+Java. Each library implements the same dictionary-free algorithm with three
+explicit modes.
 
 ```text
-codigo-do-cliente-ativo-no-estoque -> cdg-clnt-atv-estq
 active-customer-code-in-the-stock -> actv-cstm-cd-the-stck
+codigo-do-cliente-ativo-no-estoque -> cdg-clnt-atv-estq
 ```
 
-O segundo exemplo segue as regras: `code` vira `cd` e termos com tres letras,
-como `the`, sao preservados. Para obter `actv-cstm-cdg-stck`, fornecer o mapa
-`{"the": "", "code": "cdg"}` no modo personalizado.
+Words such as `code` become `cd`; three-character words such as `the` are
+preserved. Use replacements to override individual words:
+`{"the": "", "code": "cdg"}` produces `actv-cstm-cdg-stck` for the first input.
 
-## Modos
+## Modes
 
-| Modo | Comportamento |
+| Mode | Behavior |
 | --- | --- |
-| `universal` | Padrao: descartar termos menores que 3, preservar termos de 3, comprimir os demais e limitar a 4 |
-| `custom` | Aplicar mapa opcional antes das regras universais |
-| `configurable` | Aplicar mapa opcional e permitir tres limites independentes |
+| `universal` | Default: discard words shorter than 3 characters, preserve words of length 3, compress longer words to at most 4 characters |
+| `custom` | Apply an optional replacement map before the universal rules |
+| `configurable` | Apply an optional replacement map and three independent length limits |
 
-Na compressao, preservar o primeiro ponto de codigo, remover as vogais do
-restante (incluindo acentos), colapsar letras identicas consecutivas e truncar.
-Separadores: hifen ASCII, underscore e espacos Unicode. Normalizacao NFC e
-minusculas independentes da localidade; comprimentos usam pontos de codigo.
-Outras pontuacoes, numeros e simbolos nao sao removidos.
+Compression preserves the first code point, removes vowels and their accents
+from the remainder, collapses consecutive identical letters, and truncates.
+Separators are ASCII hyphens, underscores, and Unicode whitespace. Input is
+lowercased without locale-dependent rules and normalized to NFC. Lengths are
+measured in Unicode code points. Other punctuation, numbers, and symbols remain.
 
-Os valores do mapa sao resultados **literais**: nao sao normalizados,
-comprimidos ou truncados. String vazia remove uma palavra. Chaves passam pela
-mesma normalizacao da entrada; chaves vazias, com separadores ou que colidam
-depois da normalizacao geram erro.
+Replacement values are **literal results**: they are not normalized, compressed,
+or truncated. An empty value removes a word. Keys use the same normalization as
+the input; empty keys, keys containing separators, and normalized collisions
+are rejected.
 
-Limites so sao permitidos em `configurable`; mapa nao e permitido em
-`universal`, mesmo vazio. Palavras preservadas e substituicoes nao passam
-pelo limite de compressao. Limites aceitam inteiros em 1..2147483647, sem
-exigir ordenacao entre eles. Entradas nulas/vazias retornam string vazia
-quando as opcoes sao validas; opcoes invalidas sempre geram erro explicito.
-Em Go, `string` nao admite `nil`; usar `""`.
+Length options are available only in `configurable` mode. Replacement maps,
+including empty maps, are not accepted in `universal` mode. Preserved words and
+replacement values bypass truncation. Limits are independent integers from 1
+through 2147483647.
 
-Consulte o [contrato normativo](./spec/algorithm.md) e os
-[vetores de teste](./spec/cases.json).
+Null or empty input produces an empty string when options are valid. Invalid
+options always produce an explicit error. Go strings cannot be `nil`; use `""`.
+See the [algorithm contract](./spec/algorithm.md) and
+[shared test cases](./spec/cases.json) for details.
 
-## Pacotes e compatibilidade
+## Packages and compatibility
 
-| Linguagem | Minimo | API e instrucoes |
+| Language | Minimum version | API and guide |
 | --- | --- | --- |
-| Node.js | 22 | [curtailStr](./packages/node/README.md), ESM/CommonJS e tipos TypeScript |
-| Python | 3.11 | [curtail_str](./packages/python/README.md), pacote tipado |
-| Go | 1.26 | [CurtailStr](./packages/go/README.md), retorno `(string, error)` |
-| Java | 8, Eclipse Temurin | [CurtailStr.curtailStr](./packages/java/README.md), JAR sem dependencias de runtime |
+| Node.js | 22 | [curtailStr](./packages/node/README.md), ESM/CommonJS and TypeScript declarations |
+| Python | 3.11 | [curtail_str](./packages/python/README.md), typed package |
+| Go | 1.26 | [CurtailStr](./packages/go/README.md), returns `(string, error)` |
+| Java | 8, Eclipse Temurin | [CurtailStr.curtailStr](./packages/java/README.md), JAR without runtime dependencies |
 
-| Opcao | Node.js / Java | Python | Go | Padrao |
+| Option | Node.js / Java | Python | Go | Default |
 | --- | --- | --- | --- | --- |
-| Modo | `mode` | `mode` | `Mode` | universal |
-| Mapa | `replacements` | `replacements` | `Replacements` | ausente |
-| Minimo | `minWordLength` | `min_word_length` | `MinWordLength` | 3 |
-| Preservacao | `preserveWordLength` | `preserve_word_length` | `PreserveWordLength` | 3 |
-| Corte | `maxWordLength` | `max_word_length` | `MaxWordLength` | 4 |
+| Mode | `mode` | `mode` | `Mode` | universal |
+| Replacements | `replacements` | `replacements` | `Replacements` | omitted |
+| Minimum length | `minWordLength` | `min_word_length` | `MinWordLength` | 3 |
+| Preservation length | `preserveWordLength` | `preserve_word_length` | `PreserveWordLength` | 3 |
+| Compressed length | `maxWordLength` | `max_word_length` | `MaxWordLength` | 4 |
 
-Java usa enum `Mode` e builder imutavel; Go usa constantes tipadas e ponteiros
-opcionais nos limites. Consulte os exemplos por pacote.
+Java uses a `Mode` enum and immutable options built with a builder. Go uses
+typed constants and optional pointers for length limits.
 
-### Instalacao local
+### Install from source
 
-Os nomes abaixo sao locais/provisorios; nenhum pacote foi publicado.
-Instale este pacote Node.js pelo caminho local ate a publicacao.
-O registro npm nao retornou um pacote `curtail-str` na consulta de 21/10/2026;
-isso nao reserva o nome nem garante sua disponibilidade futura.
+Clone the repository and install the package from your local checkout:
 
 ```sh
-# Node.js, a partir de um projeto consumidor
-npm install /caminho/curtail-str/packages/node
+git clone https://github.com/alansferreira/curtail-str.git
+
+# Node.js: run from the consuming project
+npm install /path/to/curtail-str/packages/node
 
 # Python
-python -m pip install /caminho/curtail-str/packages/python
+python -m pip install /path/to/curtail-str/packages/python
 
-# Go, dentro do modulo consumidor
-go mod edit -replace github.com/alansferreira/curtail-str/packages/go=/caminho/curtail-str/packages/go
+# Go: run inside the consuming module
+go mod edit -replace github.com/alansferreira/curtail-str/packages/go=/path/to/curtail-str/packages/go
 go get github.com/alansferreira/curtail-str/packages/go
 
-# Java: instalar coordenadas org.alf:curtail-str:0.1.0 no Maven local
-mvn -B -ntp -f /caminho/curtail-str/packages/java/pom.xml install
+# Java: install org.alf:curtail-str:0.1.0 in the local Maven repository
+mvn -B -ntp -f /path/to/curtail-str/packages/java/pom.xml install
 ```
 
-Node.js, Python e Java nao possuem dependencias de runtime. Go utiliza
-`golang.org/x/text` para normalizacao Unicode.
+Node.js, Python, and Java have no runtime dependencies. Go uses
+`golang.org/x/text` for Unicode normalization.
 
-## Pacote de terminal sem runtime adicional
+## Standalone shell package
 
-O [pacote shell](./packages/shell/README.md) inclui tres scripts independentes:
-POSIX `sh`/`awk` para Unix, `.bat` puro para CMD e `.ps1` para PowerShell.
-Oferece inicialmente apenas o modo universal. Unicode e aceito com
-limitacoes diferentes por plataforma, documentadas no pacote; nao ha
-paridade Unicode garantida com as bibliotecas.
-
-```sh
-sh packages/shell/curtail-str.sh "codigo-do-cliente-ativo-no-estoque"
-# cdg-clnt-atv-estq
-python3 scripts/package_shell.py
-```
-
-O build gera TAR.GZ, ZIP e SHA-256 versionados em `packages/shell/dist/`.
-O download usa o proprio repositorio GitHub, sem Releases:
+The [shell package](./packages/shell/README.md) provides independent POSIX
+`sh`/`awk`, Windows CMD, and PowerShell scripts. It supports universal mode
+without Node.js, Python, Go, or Java. Unicode behavior varies by platform;
+see the package guide for restrictions.
 
 ```sh
 curl -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.sh -o curtail-str.sh
-sh curtail-str.sh "codigo-do-cliente"
+sh curtail-str.sh "active-customer-code-in-the-stock"
+# actv-cstm-cd-the-stck
 ```
 
-[Baixar TAR.GZ](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.tar.gz),
-[ZIP](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.zip)
-e [SHA-256](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/SHA256SUMS).
-Os links funcionam apos commit e push para `main`; use SHA de commit ou tag
-no lugar de `main` para fixar uma versao imutavel. O guia do pacote inclui
-curl, wget e Invoke-WebRequest. A CI testa Linux/macOS/Windows e tambem
-disponibiliza os arquivos como artifacts.
+Download the complete package:
+[TAR.GZ](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.tar.gz),
+[ZIP](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.zip),
+and [SHA-256 checksums](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/SHA256SUMS).
+Replace `main` with a commit SHA or tag to pin an immutable revision.
+The package guide includes curl, wget, and Invoke-WebRequest examples.
 
-## Testes e distribuicao
+## Development and verification
 
-Executar a partir da raiz do monorepositorio:
+Run from the repository root:
 
 ```sh
 # Node.js
@@ -129,7 +119,7 @@ npm run typecheck
 node test/package-smoke.cjs
 cd ../..
 
-# Python: usar ambiente virtual
+# Python: use a virtual environment
 python3 -m venv .venv
 .venv/bin/python -m pip install -e packages/python build
 .venv/bin/python -m unittest discover -s packages/python/tests -v
@@ -144,42 +134,42 @@ cd ../..
 
 # Java
 mvn -B -ntp -f packages/java/pom.xml verify
+
+# Shell distribution
+python3 scripts/package_shell.py
+python3 -m unittest discover -s packages/shell/tests -v
 ```
 
-Todos os runners leem o mesmo corpus, incluindo casos de erro. Os testes de
-desenvolvimento precisam do monorepositorio completo; nenhum consumidor
-depende dos arquivos de especificacao.
+All library test runners read the same fixtures, including error cases.
+Development tests require the complete checkout; installed packages do not
+depend on specification files.
 
-A [CI](./.github/workflows/ci.yml) cobre as linhas Node 22/24/26, Python
-3.11..3.15, Go 1.26/1.27 e Temurin 8/11/17/21/25/27, usando patches recentes.
-Tambem instala o tarball npm, wheel e sdist Python, consome o modulo Go fora
-da raiz e compila um consumidor Java apenas com o JAR gerado.
+The [CI workflow](./.github/workflows/ci.yml) covers Node.js 22/24/26,
+Python 3.11 through 3.15, Go 1.26/1.27, and Temurin 8/11/17/21/25/27.
+It also checks installed npm and Python distributions, an external Go
+consumer, a standalone JAR consumer, and shell scripts on Linux, macOS,
+and Windows.
 
-## Politica de suporte
+## Support policy
 
-Minimos escolhidos em 21/10/2026: a linha oficialmente mantida mais antiga de
-cada linguagem; para Java, a LTS mais antiga mantida pelo Eclipse Temurin.
-Node 20 e Python 3.10 ja encerraram suporte. Go mantem as duas linhas mais
-recentes. Usar sempre o patch mais recente da linha escolhida.
+Use the latest maintenance patch of a supported runtime line. Minimum
+requirements are listed above; incompatible requirement changes must be
+communicated in an appropriate new package version.
 
-Fontes oficiais:
+Runtime lifecycle information:
 [Node.js](https://github.com/nodejs/Release/blob/main/schedule.json),
 [Python](https://devguide.python.org/versions/),
 [Go](https://go.dev/doc/devel/release),
-[Temurin](https://adoptium.net/support).
+and [Eclipse Temurin](https://adoptium.net/support).
 
-Revisar a matriz quando as linhas encerrarem suporte. Nao elevar os minimos
-de uma versao publicada silenciosamente; comunicar alteracoes incompativeis
-em uma nova versao apropriada.
+## Limitations
 
-## Limites e escopo
-
-- A heuristica nao traduz, nao garante pronuncia, unicidade ou idempotencia.
-- Abreviar pode causar colisoes; nao substituir validacao de identificadores.
-- Letras e caixa Unicode dependem do banco do runtime. Os casos contratados
-  sao testados, mas caracteres de versoes Unicode diferentes podem divergir.
-- Strings Unicode malformadas sao rejeitadas, nao reparadas silenciosamente.
-- Nenhum parametro e alterado; consumidores nao devem modificar mapas
-  concorrentemente durante chamadas.
-- Publicacao, licenca de distribuicao, nomes definitivos de registro,
-  traducoes e integracao Git ficam para uma etapa posterior.
+- This is a textual heuristic, not a translator or a pronunciation engine.
+- Results are not guaranteed to be unique or idempotent. Handle collisions
+  before using them as identifiers.
+- Unicode classification and case conversion depend on each runtime's Unicode
+  database. Characters introduced in different Unicode versions may differ.
+- Library APIs reject malformed Unicode rather than silently repairing it.
+  Shell scripts have separate, documented Unicode limitations.
+- Functions do not mutate arguments. Do not modify replacement maps
+  concurrently while a call is running.

@@ -1,7 +1,18 @@
-# Curtail-str para Go
+# curtail-str for Go
 
-Go 1.26 ou superior. Dependencia de runtime: `golang.org/x/text/unicode/norm`
-para normalizacao Unicode.
+Requires Go 1.26 or later. Uses `golang.org/x/text/unicode/norm` for Unicode
+normalization.
+
+## Install from source
+
+Inside the consuming module, point the module path at a local checkout:
+
+```sh
+go mod edit -replace github.com/alansferreira/curtail-str/packages/go=/path/to/curtail-str/packages/go
+go get github.com/alansferreira/curtail-str/packages/go
+```
+
+## Usage
 
 ```go
 package main
@@ -14,35 +25,38 @@ import (
 
 func main() {
     maximum := int64(2)
-    result, err := curtailstr.CurtailStr("cliente", curtailstr.Options{
+    result, err := curtailstr.CurtailStr("customer", curtailstr.Options{
         Mode: curtailstr.Configurable,
         MaxWordLength: &maximum,
     })
     if err != nil {
         log.Fatal(err)
     }
-    fmt.Println(result) // cl
+    fmt.Println(result) // cs
 }
 ```
 
-Uma chamada sem `Options` usa `Universal`. O valor zero de `Options.Mode`
-tambem significa universal. O modo `Custom` aceita
-`Replacements: map[string]string{"the": "", "code": "cdg"}`. Mapa `nil`
-significa ausente; mapa vazio nao nulo e fornecido e e rejeitado em universal.
+Calling without `Options` uses `Universal`. The zero value of `Options.Mode`
+also means universal. `Custom` accepts, for example,
+`Replacements: map[string]string{"the": "", "code": "cdg"}`.
+A `nil` map means omitted; a non-nil empty map counts as supplied and is
+rejected in universal mode.
 
-`MinWordLength` (3), `PreserveWordLength` (3) e `MaxWordLength` (4) sao
-ponteiros opcionais para `int64`, limitados a 1..2147483647. Sao independentes
-e exclusivos de `Configurable`. Palavras preservadas e valores literais do
-mapa nao sao truncados. `""` como substituicao remove o termo.
+`MinWordLength` (3), `PreserveWordLength` (3), and `MaxWordLength` (4) are
+optional `*int64` values ranging from 1 through 2147483647. They are independent
+and available only in `Configurable`. Preserved words and literal replacement
+values are not truncated. An empty replacement removes a term.
 
-Erros de opcoes ou UTF-8 invalido retornam `error`, mesmo para entrada vazia.
-Uma string vazia retorna `""` sem erro quando as opcoes sao validas.
-Nenhum argumento e modificado; nao alterar mapas concorrentemente durante
-uma chamada.
+Invalid options or invalid UTF-8 return an `error`, even for empty input.
+Empty input returns `""` without error when options are valid.
+Arguments are not mutated; do not modify maps concurrently during a call.
 
-Nao ha traducao nem garantia de unicidade. `code` vira `cd` e `the` permanece
-`the` por padrao. Comprimentos usam pontos de codigo Unicode.
+The heuristic does not translate words or guarantee uniqueness. By default,
+`code` becomes `cd` and `the` remains `the`. Lengths use Unicode code points.
 
-Desenvolvimento: `go test -race ./...` e `go vet ./...`. Testes usam o corpus
-da raiz do monorepositorio; consumidores nao dependem dele. Ate a publicacao
-do repositorio, consumir com um `replace` local.
+## Development
+
+Run `go test -race ./...` and `go vet ./...` from this directory.
+Tests use fixtures at the repository root; consumers do not depend on them.
+
+See the [algorithm contract](../../spec/algorithm.md) for complete semantics.

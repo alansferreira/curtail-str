@@ -1,163 +1,162 @@
-# Curtail-str shell 0.1.0
+# curtail-str shell
 
-Comando standalone, **modo universal apenas**. Nao exige Node.js, Python,
-Go, Java, pip ou npm para executar. Nao oferece mapas nem limites configuraveis.
-O nome da funcao principal em shell e PowerShell e `curtailStr`; em batch,
-o processamento usa a subrotina `:curtail-str`.
+Standalone identifier shortening in **universal mode**. No Node.js, Python,
+Go, Java, pip, or npm is required to run the scripts. Replacement maps and
+configurable length limits are not supported.
 
-## Plataformas e requisitos
+## Platforms and requirements
 
-| Arquivo | Plataformas | Requisitos presentes no sistema |
+| Script | Platforms | System requirements |
 | --- | --- | --- |
-| `curtail-str.sh` | Linux, macOS, BSD, WSL | `/bin/sh` e `awk` POSIX |
-| `curtail-str.bat` | Windows 10/11, Windows Server | `cmd.exe`, sem PowerShell |
-| `curtail-str.ps1` | Windows; Linux/macOS com PowerShell | Windows PowerShell 5.1+ ou PowerShell 7 |
+| `curtail-str.sh` | Linux, macOS, BSD, WSL | `/bin/sh` and POSIX `awk` |
+| `curtail-str.bat` | Windows 10/11, Windows Server | `cmd.exe`; no PowerShell dependency |
+| `curtail-str.ps1` | Windows; Linux/macOS with PowerShell | Windows PowerShell 5.1+ or PowerShell 7 |
 
-Um unico argumento contem o texto; a saida vai para stdout com nova linha.
-`--help` no shell/batch e `-Help` no PowerShell exibem ajuda. Saida vazia
-tambem tem uma nova linha. Entrada incorreta gera erro em stderr e codigo
-nao zero. `""` e uma entrada valida. Em PowerShell, informar `-Text ""`.
-Para texto com hifen inicial, preferir `-Text` no PowerShell.
+Pass the text as one argument. Results are written to stdout with a trailing
+newline, including empty results. Invalid arguments produce a nonzero exit
+code and an error on stderr. Use `--help` in POSIX shell or CMD and `-Help` in
+PowerShell. Empty input is valid; use `-Text ""` in PowerShell.
 
 ```sh
-sh curtail-str.sh "codigo-do-cliente-ativo-no-estoque"
-# cdg-clnt-atv-estq
 sh curtail-str.sh "active-customer-code-in-the-stock"
 # actv-cstm-cd-the-stck
 ```
 
 ```bat
-curtail-str.bat "codigo-do-cliente-ativo-no-estoque"
-REM cdg-clnt-atv-estq
+curtail-str.bat "active-customer-code-in-the-stock"
+REM actv-cstm-cd-the-stck
 ```
 
 ```powershell
-.\curtail-str.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
-# cdg-clnt-atv-estq
+.\curtail-str.ps1 -Text "active-customer-code-in-the-stock"
+# actv-cstm-cd-the-stck
 ```
 
-As regras ASCII seguem o algoritmo universal: minusculas, separacao por
-hifen/underscore/espacos, descarte de termos menores que 3, preservacao dos
-de 3, remocao de vogais depois da inicial, colapso de letras repetidas e
-corte em 4. Nao traduz nem garante unicidade ou idempotencia.
+The ASCII rules follow the universal algorithm: lowercase, split on hyphens,
+underscores and whitespace, discard words shorter than 3 characters, preserve
+words of length 3, remove vowels after the first character, collapse repeated
+letters, and truncate compressed words to 4 characters.
+Results are not translations and are not guaranteed to be unique or idempotent.
 
-## Unicode e limites intencionais
+## Unicode and input limitations
 
-Unicode e aceito, mas **nao ha promessa de paridade com as bibliotecas ou
-entre os scripts**:
+Unicode input is accepted, but **results are not guaranteed to match between
+scripts or with the library APIs**:
 
-- POSIX: caixa, `[[:alpha:]]`, espacos, comprimento e corte dependem do `awk`
-  e da localidade. Somente vogais ASCII sao removidas. Nao ha normalizacao
-  NFC/NFD. Um awk orientado a bytes pode cortar uma sequencia UTF-8 no meio.
-  Use ASCII quando precisar de saida portavel e UTF-8 valida garantida.
-- PowerShell: normaliza NFC e remove vogais latinas decompostas e suas marcas.
-  Usa minusculas invariantes do .NET. Comprimentos e cortes usam unidades
-  UTF-16; caracteres suplementares podem ser cortados no meio. Preferir
-  letras do plano basico Unicode. Espacos seguem a regex do .NET.
-- Batch: conversao de caixa, remocao de vogais e colapso de letras cobrem
-  somente ASCII. Demais caracteres sao preservados conforme a pagina de
-  codigo ativa do CMD; contagem/corte seguem o CMD. So hifen, underscore,
-  espaco e tab sao separadores. Nao ha normalizacao de acentos.
+- **POSIX:** case conversion, `[[:alpha:]]`, whitespace, lengths, and truncation
+  depend on `awk` and the locale. Only ASCII vowels are removed. No NFC/NFD
+  normalization is performed. Byte-oriented awk implementations may truncate
+  inside a UTF-8 sequence. Use ASCII for portable, guaranteed valid UTF-8 output.
+- **PowerShell:** normalizes to NFC and removes decomposed Latin vowels and
+  their marks. Uses .NET invariant lowercase conversion. Lengths and truncation
+  use UTF-16 units, so supplementary characters may be split. Prefer Basic
+  Multilingual Plane letters. Whitespace follows .NET regular expressions.
+- **Batch:** case conversion, vowel removal, and duplicate-letter removal cover
+  ASCII only. Other characters depend on the active CMD code page; counting and
+  truncation follow CMD behavior. Only hyphens, underscores, spaces, and tabs
+  are separators. Accents are not normalized.
 
-O batch recebe argumentos sujeitos a expansao do CMD: `%`, `!`, aspas,
-metacaracteres e multiplas linhas exigem cuidado. Use apenas slugs simples
-sem esses caracteres no `.bat`; para texto arbitrario prefira `.ps1` ou
-`.sh`, com o quoting apropriado do shell. NUL nao pode ser transportado
-como argumento. Limite de entrada do batch: 4000 caracteres, abaixo do
-limite de linha do CMD (8191). Nao usar estes scripts para dados hostis
-interpolados em comandos. Eles nao sao parsers de linhas de comando.
+CMD expands arguments before execution. Percent signs, exclamation marks,
+quotes, metacharacters, and multiline text require special care. Use simple
+slugs without these characters in the batch script. For arbitrary text, prefer
+PowerShell or POSIX shell with appropriate quoting. NUL cannot be passed in
+an argument. Batch input is limited to 4000 characters, below CMD's 8191-character
+command-line limit. Do not interpolate untrusted input into shell commands.
 
-## Download HTTP
+## Download
 
-Os arquivos gerados sao `curtail-str-shell-0.1.0.tar.gz`,
-`curtail-str-shell-0.1.0.zip` e `SHA256SUMS`, versionados em `packages/shell/dist/`.
-O download usa o proprio repositorio GitHub, sem Releases ou servidor adicional:
+Archives and checksums are available directly from the repository:
 
-`https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist`
+- [curtail-str-shell-0.1.0.tar.gz](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.tar.gz)
+- [curtail-str-shell-0.1.0.zip](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.zip)
+- [SHA256SUMS](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/SHA256SUMS)
 
-Os links ficam disponiveis depois do commit e push dos arquivos para `main`.
-Para downloads imutaveis e reproduziveis, substitua `main` pelo SHA de um commit
-ou por uma tag publicada. A branch `main` acompanha as alteracoes do projeto.
+Replace `main` with a commit SHA or tag for an immutable revision.
+Inspect downloaded scripts and compare checksums with a trusted source before
+executing them. Checksums downloaded from the same host detect corruption,
+but do not authenticate a compromised host. Avoid `curl | sh` and
+`Invoke-Expression` on downloaded content.
 
-Unix, com curl:
+### Unix
 
 ```sh
 base='https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist'
 curl -fL "$base/curtail-str-shell-0.1.0.tar.gz" -o curtail-str-shell-0.1.0.tar.gz
 curl -fL "$base/SHA256SUMS" -o SHA256SUMS
-# Compare o hash com uma fonte confiavel antes de extrair/executar:
 sha256sum curtail-str-shell-0.1.0.tar.gz
 # macOS: shasum -a 256 curtail-str-shell-0.1.0.tar.gz
+# Compare the hash with a trusted value before extracting:
 tar -xzf curtail-str-shell-0.1.0.tar.gz
-sh curtail-str-shell-0.1.0/curtail-str.sh "codigo-do-cliente"
+sh curtail-str-shell-0.1.0/curtail-str.sh "active-customer-code-in-the-stock"
 ```
 
-Com wget, substituir cada `curl -fL URL -o ARQUIVO` por
-`wget -O ARQUIVO URL`. Pode-se instalar manualmente `curtail-str.sh` como
-`~/.local/bin/curtail-str`, dar permissao com `chmod +x` e adicionar esse
-diretorio ao PATH. Nao precisa de sudo.
+With wget, replace `curl -fL URL -o FILE` with `wget -O FILE URL`.
+To install the command for your user, copy `curtail-str.sh` to
+`~/.local/bin/curtail-str`, run `chmod +x ~/.local/bin/curtail-str`, and ensure
+that directory is on your PATH. No sudo is needed.
 
-Windows PowerShell:
+### Windows PowerShell
 
 ```powershell
 $base = 'https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist'
 Invoke-WebRequest -UseBasicParsing "$base/curtail-str-shell-0.1.0.zip" -OutFile curtail-str-shell-0.1.0.zip
 Invoke-WebRequest -UseBasicParsing "$base/SHA256SUMS" -OutFile SHA256SUMS
 Get-FileHash curtail-str-shell-0.1.0.zip -Algorithm SHA256
-# Compare com o hash confiavel antes de extrair:
+# Compare the hash with a trusted value before extracting:
 Expand-Archive curtail-str-shell-0.1.0.zip -DestinationPath .
-.\curtail-str-shell-0.1.0\curtail-str.bat "codigo-do-cliente"
+.\curtail-str-shell-0.1.0\curtail-str.bat "active-customer-code-in-the-stock"
 ```
 
-No CMD do Windows 10/11 com `curl.exe` e `tar.exe` disponiveis:
+Follow your organization's execution policy for `.ps1` scripts. The batch
+script does not require changing PowerShell execution policy.
+
+### Windows CMD
+
+On systems with `curl.exe` and `tar.exe`:
 
 ```bat
 curl.exe -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.0.zip -o curtail-str-shell-0.1.0.zip
 certutil -hashfile curtail-str-shell-0.1.0.zip SHA256
-REM Compare com o hash confiavel antes de extrair:
+REM Compare the hash with a trusted value before extracting:
 tar.exe -xf curtail-str-shell-0.1.0.zip
-curtail-str-shell-0.1.0\curtail-str.bat "codigo-do-cliente"
+curtail-str-shell-0.1.0\curtail-str.bat "active-customer-code-in-the-stock"
 ```
 
-Checksum baixado do mesmo servidor detecta corrupcao, nao autentica um host
-comprometido. Nao use `curl | sh` ou `Invoke-Expression` com scripts baixados.
-Inspecione os arquivos. Para `.ps1`, respeite a politica de execucao da
-organizacao; nao e necessario desabilita-la para usar o `.bat`.
+### Download individual scripts
 
-### Download direto de um script
-
-Cada script e independente e pode ser baixado sem o pacote:
+Each script can run independently of the archive:
 
 ```sh
 curl -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.sh -o curtail-str.sh
-# Alternativa:
+# Alternatively:
 # wget -O curtail-str.sh https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.sh
-sh curtail-str.sh "codigo-do-cliente"
+sh curtail-str.sh "active-customer-code-in-the-stock"
 ```
 
 ```powershell
 Invoke-WebRequest -UseBasicParsing https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.ps1 -OutFile curtail-str.ps1
-.\curtail-str.ps1 -Text "codigo-do-cliente"
+.\curtail-str.ps1 -Text "active-customer-code-in-the-stock"
 ```
 
 ```bat
 curl.exe -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.bat -o curtail-str.bat
-curtail-str.bat "codigo-do-cliente"
+curtail-str.bat "active-customer-code-in-the-stock"
 ```
 
-## Geracao e testes (somente desenvolvimento)
+## Development
 
-Na raiz do repositorio:
+Run from the repository root:
 
 ```sh
 python3 scripts/package_shell.py
 python3 -m unittest discover -s packages/shell/tests -v
 ```
 
-O empacotamento exige apenas a biblioteca padrao Python no ambiente de build,
-nao nas maquinas consumidoras. O ZIP inclui CRLF nos scripts Windows.
-Depois de alterar os scripts ou este guia, gere novamente os arquivos e inclua
-os dois pacotes e `SHA256SUMS` no mesmo commit. Nao e necessario executar o build
-para baixar os arquivos ja versionados.
-Os testes verificam ASCII compartilhado e casos especificos de cada
-plataforma. Testes Windows exigem Windows; a CI cobre CMD e PowerShell.
+Packaging uses only the Python standard library on the build machine.
+Consumers do not need Python. The ZIP contains CRLF line endings for Windows
+scripts. Regenerate both archives and `SHA256SUMS` whenever the scripts or this
+guide change, and version them together.
+
+Tests cover shared ASCII behavior and platform-specific cases. CMD tests
+require native Windows; PowerShell tests require an installed PowerShell.
+The CI workflow covers Linux, macOS, and Windows.

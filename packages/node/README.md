@@ -1,38 +1,51 @@
-# Curtail-str para Node.js
+# curtail-str for Node.js
 
-Node.js 22 ou superior. Pacote local, sem dependencias de runtime.
-Este pacote ainda nao foi publicado: instale pelo caminho local.
-Os imports abaixo resolvem o pacote local instalado. O registro npm nao
-retornou um pacote `curtail-str` em 21/10/2026; o nome ainda nao foi reservado.
+Requires Node.js 22 or later. No runtime dependencies. Supports ESM, CommonJS,
+and TypeScript declarations.
+
+## Install from source
+
+From the consuming project:
+
+```sh
+npm install /path/to/curtail-str/packages/node
+```
+
+## Usage
 
 ```js
 import { curtailStr } from 'curtail-str';
 // CommonJS: const { curtailStr } = require('curtail-str');
 
-curtailStr('codigo-do-cliente'); // 'cdg-clnt'
+curtailStr('active-customer-code-in-the-stock'); // 'actv-cstm-cd-the-stck'
 curtailStr('code-in-the-stock', {
   mode: 'custom',
   replacements: { the: '', code: 'cdg' },
 }); // 'cdg-stck'
-curtailStr('cliente', {
+curtailStr('customer', {
   mode: 'configurable',
   maxWordLength: 2,
-}); // 'cl'
+}); // 'cs'
 ```
 
-`null` e `undefined` retornam `''`. Argumentos invalidos geram `TypeError` ou
-`RangeError`, inclusive para entrada vazia. Mapas sao objetos simples de
-strings; valores sao resultados literais, `''` remove uma palavra.
+`null` and `undefined` return `''`. Invalid arguments throw `TypeError` or
+`RangeError`, even for empty input. Replacement maps are plain objects with
+string values; values are literal results, and `''` removes a word.
 
-O modo padrao `universal` nao aceita mapa. Limites inteiros positivos
-`minWordLength` (3), `preserveWordLength` (3) e `maxWordLength` (4) sao
-independentes e exclusivos de `configurable`. Palavras preservadas e
-substituicoes nao sao truncadas. Nenhum argumento e modificado.
+The default `universal` mode does not accept a replacement map.
+The positive integer limits `minWordLength` (3), `preserveWordLength` (3),
+and `maxWordLength` (4) are independent and available only in `configurable`.
+Preserved words and replacements are not truncated. Arguments are not mutated.
 
-Esta heuristica nao traduz palavras nem garante unicidade. Conta pontos de
-codigo Unicode, preserva a inicial e remove vogais do restante das palavras
-comprimidas. `code` vira `cd` e `the` permanece `the` por padrao.
+This heuristic does not translate words or guarantee uniqueness. It counts
+Unicode code points, preserves the first code point, and removes vowels from
+the rest of compressed words. By default, `code` becomes `cd` and `the` remains
+`the`.
 
-Desenvolvimento: `npm ci`, `npm test`, `npm run typecheck`,
-`node test/package-smoke.cjs`. Os testes de contrato usam o corpus na raiz
-do monorepositorio; o pacote instalado nao depende dele.
+## Development
+
+Run `npm ci`, `npm test`, `npm run typecheck`, and
+`node test/package-smoke.cjs` from this directory. Contract tests use fixtures
+at the repository root; the installed package does not depend on them.
+
+See the [algorithm contract](../../spec/algorithm.md) for complete semantics.

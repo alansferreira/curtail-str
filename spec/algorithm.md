@@ -1,75 +1,78 @@
-# Contrato do algoritmo
+# Algorithm contract
 
-As quatro APIs executam a mesma heuristica, sem traducao, dicionarios ou
-garantia de unicidade. Nunca usar a saida como identificador unico sem tratar
-colisoes. As funcoes nao modificam parametros nem acessam estado externo.
+The four library APIs implement the same dictionary-free heuristic without
+translation or uniqueness guarantees. Handle collisions before using results
+as unique identifiers. Functions do not mutate arguments or access external
+state. Shell scripts have a separate contract in their [guide](../packages/shell/README.md).
 
-## Opcoes
+## Options
 
-| Opcao | Padrao | Significado |
+| Option | Default | Meaning |
 | --- | --- | --- |
-| `mode` | `universal` | `universal`, `custom` ou `configurable` |
-| `replacements` | ausente | Mapa de palavra para resultado literal |
-| `minWordLength` | 3 | Descartar palavras menores |
-| `preserveWordLength` | 3 | Preservar palavras restantes ate este tamanho |
-| `maxWordLength` | 4 | Limitar apenas palavras comprimidas |
+| `mode` | `universal` | `universal`, `custom`, or `configurable` |
+| `replacements` | omitted | Map from a word to a literal result |
+| `minWordLength` | 3 | Discard shorter words |
+| `preserveWordLength` | 3 | Preserve remaining words up to this length |
+| `maxWordLength` | 4 | Limit compressed words only |
 
-As opcoes numericas sao independentes, inteiras entre 1 e 2147483647.
-`replacements` so e aceito em `custom` e `configurable`; limites so em
-`configurable`. Opcoes desconhecidas sao erros nas APIs dinamicas.
-O mapa vazio e diferente de um mapa ausente para validar o modo.
-Nas APIs tipadas Go/Java, mapa `nil`/ausente significa omitido; mapa vazio
-nao nulo significa fornecido. Objetos de opcoes ausentes usam os padroes.
+Numeric options are independent integers from 1 through 2147483647.
+`replacements` is accepted only in `custom` and `configurable`; length options
+are accepted only in `configurable`. Dynamic APIs reject unknown options.
+For mode validation, an empty map is different from an omitted map.
+In Go and Java, a nil or absent map means omitted; a non-null empty map counts
+as supplied. Omitted options use defaults.
 
-Validar todas as opcoes e tipos antes de processar a entrada, mesmo vazia.
-Entrada nula retorna `""` (em Go, usar string vazia). Outros tipos invalidos
-geram erros. Strings devem conter valores escalares Unicode validos:
-rejeitar surrogates isolados e, em Go, UTF-8 invalido, inclusive no mapa.
+Validate all options and types before processing input, including empty input.
+Null input returns `""` (use an empty string in Go). Other invalid input types
+produce errors. Strings must contain valid Unicode scalar values: reject
+unpaired surrogates and, in Go, invalid UTF-8, including replacement keys and
+values.
 
-## Normalizacao e separacao
+## Normalization and splitting
 
-Converter cada ponto de codigo para minusculas Unicode, isoladamente e sem
-localidade; isso evita sigma final contextual. U+0130 vira `i` seguido de
-U+0307. Normalizar em NFC apos a conversao. Essa regra tambem vale para chaves
-do mapa; valores do mapa sao literais, nao normalizados.
+Lowercase each Unicode code point individually, without locale-dependent rules.
+This avoids contextual final sigma. U+0130 becomes `i` followed by U+0307.
+Normalize to NFC after lowercasing. Apply this normalization to replacement
+keys as well; replacement values remain literal.
 
-Separar por `-`, `_` e a propriedade Unicode White_Space, fixada como:
+Split on `-`, `_`, and the following fixed Unicode White_Space set:
 U+0009..000D, U+0020, U+0085, U+00A0, U+1680, U+2000..200A,
-U+2028, U+2029, U+202F, U+205F, U+3000. Ignorar termos vazios.
-Nao separar por outras pontuacoes, digitos, simbolos ou U+FEFF.
+U+2028, U+2029, U+202F, U+205F, U+3000. Ignore empty terms.
+Do not split on other punctuation, digits, symbols, or U+FEFF.
 
-Cada chave do mapa deve ser uma palavra nao vazia, sem separadores, mesmo
-nas extremidades. Rejeitar colisoes entre chaves normalizadas. Valores devem
-ser strings; `""` remove o termo. Uma entrada no mapa prevalece sobre o filtro
-de tamanho, preservacao, compressao e truncamento. Valores podem ter caixa
-alta, separadores e mais de quatro caracteres: o consumidor os controla.
+Each replacement key must be a non-empty word without separators, including
+leading or trailing separators. Reject normalized key collisions. Values must
+be strings; `""` removes a term. A replacement takes precedence over length
+filtering, preservation, compression, and truncation. Values may contain
+uppercase letters, separators, and more than four characters.
 
-## Processamento de cada palavra
+## Word processing
 
-1. Consultar mapa quando permitido; se houver entrada, usar seu valor final.
-2. Contar pontos de codigo NFC. Descartar se menor que `minWordLength`.
-3. Preservar se menor ou igual a `preserveWordLength`.
-4. Nos demais termos, separar o primeiro ponto de codigo NFC e preserva-lo.
-5. Decompor somente o restante em NFD; remover `a/e/i/o/u` e as marcas
-   combinantes que os acompanham. Nao remover marcas de consoantes. Recompor
-   o restante em NFC e recolocar o primeiro ponto de codigo.
-6. Reduzir letras identicas consecutivas a uma, considerando categorias
-   Unicode `L*`. Nao colapsar numeros, marcas isoladas ou pontuacao.
-7. Cortar o resultado em `maxWordLength` pontos de codigo.
-8. Unir resultados nao vazios com `-`.
+1. Look up the word in the replacement map when allowed. If present, use the
+   replacement as the final result.
+2. Count NFC code points. Discard words shorter than `minWordLength`.
+3. Preserve words whose length is at most `preserveWordLength`.
+4. For other words, separate and preserve the first NFC code point.
+5. Decompose only the remainder to NFD. Remove `a/e/i/o/u` and their following
+   combining marks. Preserve marks attached to consonants. Recompose the
+   remainder to NFC and restore the first code point.
+6. Collapse consecutive identical letters, using Unicode categories `L*`.
+   Do not collapse digits, isolated combining marks, or punctuation.
+7. Truncate the result to `maxWordLength` code points.
+8. Join non-empty results with `-`.
 
-Preservacao e substituicao nao passam pelo corte. Portanto, os limites nao
-precisam ser ordenados. Nao contar bytes, unidades UTF-16 ou grafemas.
+Preserved words and replacements bypass truncation, so length limits do not
+need to be ordered. Count code points, not bytes, UTF-16 units, or graphemes.
 
-## Exemplos
+## Examples
 
-- Universal: `codigo-do-cliente-ativo-no-estoque` -> `cdg-clnt-atv-estq`.
 - Universal: `active-customer-code-in-the-stock` -> `actv-cstm-cd-the-stck`.
-- Custom com `{"the":"","code":"cdg"}`: o segundo exemplo vira
+- Universal: `codigo-do-cliente-ativo-no-estoque` -> `cdg-clnt-atv-estq`.
+- Custom with `{"the":"","code":"cdg"}`: the first example becomes
   `actv-cstm-cdg-stck`.
 
-[cases.json](./cases.json) e o corpus compartilhado pelos quatro runners.
-`error: true` exige erro explicito, nao uma string de sucesso.
-Casos exclusivos do sistema de tipos de cada linguagem ficam em testes locais.
-Os bancos Unicode dos runtimes podem diferir para caracteres adicionados em
-versoes recentes; nao se promete equivalencia irrestrita entre bancos distintos.
+[cases.json](./cases.json) contains the fixtures shared by all four runners.
+`error: true` requires an explicit error, not a success-shaped string.
+Language-specific type-system cases belong in each package's tests.
+Runtime Unicode databases may differ for recently introduced characters;
+unrestricted equivalence across different databases is not guaranteed.

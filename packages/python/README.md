@@ -1,33 +1,50 @@
-# Curtail-str para Python
+# curtail-str for Python
 
-Python 3.11 ou superior, sem dependencias de runtime.
+Requires Python 3.11 or later. No runtime dependencies. Includes type
+annotations and a `py.typed` marker.
+
+## Install from source
+
+```sh
+python -m pip install /path/to/curtail-str/packages/python
+```
+
+The distribution name is `curtail-str`; the import name is `curtail_str`.
+
+## Usage
 
 ```python
 from curtail_str import curtail_str
 
-assert curtail_str("codigo-do-cliente") == "cdg-clnt"
+assert curtail_str("active-customer-code-in-the-stock") == "actv-cstm-cd-the-stck"
 assert curtail_str("code-in-the-stock", {
     "mode": "custom",
     "replacements": {"the": "", "code": "cdg"},
 }) == "cdg-stck"
-assert curtail_str("cliente", {
+assert curtail_str("customer", {
     "mode": "configurable", "max_word_length": 2,
-}) == "cl"
+}) == "cs"
 ```
 
-`None` retorna `""`. Opcoes omitidas ou `None` usam os padroes. Argumentos
-invalidos geram `TypeError` ou `ValueError`, inclusive para entrada vazia.
-Mapas associam strings a resultados finais literais; `""` remove uma palavra.
+`None` returns `""`. Omitted options or `None` use defaults. Invalid arguments
+raise `TypeError` or `ValueError`, even for empty input. Replacement maps
+associate strings with literal results; `""` removes a word.
 
-O modo padrao `universal` nao aceita mapa. Os limites inteiros positivos
-`min_word_length` (3), `preserve_word_length` (3) e `max_word_length` (4) sao
-independentes e exclusivos de `configurable`. Palavras preservadas e valores
-do mapa nao sao truncados. Nenhum argumento e modificado.
+The default `universal` mode does not accept a replacement map.
+The positive integer limits `min_word_length` (3), `preserve_word_length` (3),
+and `max_word_length` (4) are independent and available only in `configurable`.
+Preserved words and replacement values are not truncated. Arguments are not
+mutated.
 
-Esta heuristica nao traduz palavras nem garante unicidade. Conta pontos de
-codigo Unicode e preserva a inicial das palavras comprimidas.
-`code` vira `cd` e `the` permanece `the` por padrao.
+The heuristic does not translate words or guarantee uniqueness. It counts
+Unicode code points and preserves the first code point of compressed words.
+By default, `code` becomes `cd` and `the` remains `the`.
 
-Para desenvolver, instale com `python -m pip install -e .` e execute
-`python -m unittest discover -s tests -v`. Os testes de contrato requerem o
-corpus da raiz do monorepositorio; o pacote instalado nao depende dele.
+## Development
+
+Install with `python -m pip install -e .` and run
+`python -m unittest discover -s tests -v` from this directory.
+Contract tests require the fixtures at the repository root; the installed
+package does not depend on them.
+
+See the [algorithm contract](../../spec/algorithm.md) for complete semantics.
