@@ -1,4 +1,4 @@
-package local.abbreviate;
+package local.abbrev;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,11 +14,11 @@ import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class AbbreviateTest {
-    private static Abbreviate.Options options(JsonObject object) {
-        Abbreviate.Options.Builder builder = Abbreviate.Options.builder();
+public class AbbrevTest {
+    private static Abbrev.Options options(JsonObject object) {
+        Abbrev.Options.Builder builder = Abbrev.Options.builder();
         if (object.has("mode")) {
-            builder.mode(Abbreviate.Mode.valueOf(object.get("mode").getAsString().toUpperCase(Locale.ROOT)));
+            builder.mode(Abbrev.Mode.valueOf(object.get("mode").getAsString().toUpperCase(Locale.ROOT)));
         }
         if (object.has("replacements")) {
             Map<String, String> replacements = new HashMap<>();
@@ -46,12 +46,12 @@ public class AbbreviateTest {
             String snapshot = item.toString();
             try {
                 String input = item.get("input").isJsonNull() ? null : item.get("input").getAsString();
-                Abbreviate.Options supplied = options(
+                Abbrev.Options supplied = options(
                     item.has("options") ? item.getAsJsonObject("options") : new JsonObject());
-                String result = Abbreviate.abbreviate(input, supplied);
+                String result = Abbrev.abbrev(input, supplied);
                 if (error) fail(name + ": expected error");
                 assertEquals(name, item.get("expected").getAsString(), result);
-                assertEquals(name, result, Abbreviate.abbreviate(input, supplied));
+                assertEquals(name, result, Abbrev.abbrev(input, supplied));
             } catch (IllegalArgumentException ex) {
                 if (!error) throw new AssertionError(name, ex);
             }
@@ -60,25 +60,25 @@ public class AbbreviateTest {
     }
 
     @Test public void nativeContract() {
-        assertEquals("cdg", Abbreviate.abbreviate("codigo"));
-        assertEquals("", Abbreviate.abbreviate(null));
+        assertEquals("cdg", Abbrev.abbrev("codigo"));
+        assertEquals("", Abbrev.abbrev(null));
         assertThrows(IllegalArgumentException.class,
-            () -> Abbreviate.abbreviate("\ud800"));
+            () -> Abbrev.abbrev("\ud800"));
         assertThrows(IllegalArgumentException.class,
-            () -> Abbreviate.Options.builder().mode(null));
+            () -> Abbrev.Options.builder().mode(null));
         assertThrows(IllegalArgumentException.class,
-            () -> Abbreviate.Options.builder().replacements(null));
+            () -> Abbrev.Options.builder().replacements(null));
         Map<String, String> replacements = new HashMap<>();
         replacements.put("CODIGO", "OK");
-        Abbreviate.Options supplied = Abbreviate.Options.builder()
-            .mode(Abbreviate.Mode.CUSTOM).replacements(replacements).build();
+        Abbrev.Options supplied = Abbrev.Options.builder()
+            .mode(Abbrev.Mode.CUSTOM).replacements(replacements).build();
         replacements.put("CODIGO", "CHANGED");
-        assertEquals("OK", Abbreviate.abbreviate("codigo", supplied));
+        assertEquals("OK", Abbrev.abbrev("codigo", supplied));
         assertEquals("CHANGED", replacements.get("CODIGO"));
         replacements.put("abc", "\ud800");
-        Abbreviate.Options invalid = Abbreviate.Options.builder()
-            .mode(Abbreviate.Mode.CUSTOM).replacements(replacements).build();
+        Abbrev.Options invalid = Abbrev.Options.builder()
+            .mode(Abbrev.Mode.CUSTOM).replacements(replacements).build();
         assertThrows(IllegalArgumentException.class,
-            () -> Abbreviate.abbreviate("", invalid));
+            () -> Abbrev.abbrev("", invalid));
     }
 }

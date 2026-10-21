@@ -1,6 +1,6 @@
-import { abbreviate } from 'abbreviate';
+import { abbrev } from 'abbrev';
 
-const result: string = abbreviate(null);
+const result: string = abbrev(null);
 void result;
 // @ts-expect-error Replacement values must be strings.
-abbreviate('codigo', { mode: 'custom', replacements: { codigo: 1 } });
+abbrev('codigo', { mode: 'custom', replacements: { codigo: 1 } });

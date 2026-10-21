@@ -26,18 +26,18 @@ if "!char!"=="_" set "boundary=1"
 if "!char!"==" " set "boundary=1"
 if "!char!"=="	" set "boundary=1"
 if defined boundary (
-    call :abbreviate
+    call :abbrev
     set "word="
 ) else (
     set "word=!word!!char!"
 )
 goto scan
 :finish
-call :abbreviate
+call :abbrev
 echo(!output!
 exit /b 0
 
-:abbreviate
+:abbrev
 if "!word:~2,1!"=="" exit /b 0
 if "!word:~3,1!"=="" (
     set "result=!word!"
@@ -68,9 +68,9 @@ set "output=!output!!result:~0,4!"
 exit /b 0
 
 :help
-echo Usage: abbreviate.bat "text"
+echo Usage: abbrev.bat "text"
 echo Universal mode. Pure CMD; Unicode depends on the active code page.
 exit /b 0
 :usage
->&2 echo Usage: abbreviate.bat "text"
+>&2 echo Usage: abbrev.bat "text"
 exit /b 2

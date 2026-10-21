@@ -1,2 +1,2 @@
-export { abbreviate } from './index.cjs';
+export { abbrev } from './index.cjs';
 export type { Options, Replacements } from './index.cjs';

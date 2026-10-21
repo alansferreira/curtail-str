@@ -1,16 +1,16 @@
-# Abbreviate para Python
+# Abbrev para Python
 
 Python 3.11 ou superior, sem dependencias de runtime.
 
 ```python
-from abbreviate import abbreviate
+from abbrev import abbrev
 
-assert abbreviate("codigo-do-cliente") == "cdg-clnt"
-assert abbreviate("code-in-the-stock", {
+assert abbrev("codigo-do-cliente") == "cdg-clnt"
+assert abbrev("code-in-the-stock", {
     "mode": "custom",
     "replacements": {"the": "", "code": "cdg"},
 }) == "cdg-stck"
-assert abbreviate("cliente", {
+assert abbrev("cliente", {
     "mode": "configurable", "max_word_length": 2,
 }) == "cl"
 ```

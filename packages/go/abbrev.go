@@ -1,5 +1,5 @@
-// Package abbreviate provides pure, dictionary-free identifier abbreviation.
-package abbreviate
+// Package abbrev provides pure, dictionary-free identifier abbreviation.
+package abbrev
 
 import (
 	"fmt"
@@ -74,10 +74,10 @@ func compress(word string, maximum int) string {
 	return string(result)
 }
 
-// Abbreviate abbreviates input without mutating options or maps.
+// Abbrev abbrevs input without mutating options or maps.
 // Supply zero or one Options value. Invalid options and invalid UTF-8 return
 // an error, even for empty input. The zero Mode means Universal.
-func Abbreviate(input string, supplied ...Options) (string, error) {
+func Abbrev(input string, supplied ...Options) (string, error) {
 	if len(supplied) > 1 {
 		return "", fmt.Errorf("expected at most one Options value")
 	}

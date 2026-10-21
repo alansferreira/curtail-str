@@ -1,17 +1,21 @@
-# Abbreviate para Node.js
+# Abbrev para Node.js
 
 Node.js 22 ou superior. Pacote local, sem dependencias de runtime.
+O nome `abbrev` ja esta ocupado no registro npm por outro projeto.
+Instale este pacote pelo caminho local, nao com `npm install abbrev`.
+Os imports abaixo resolvem o pacote local instalado. Uma futura publicacao
+exigira um nome com escopo disponivel.
 
 ```js
-import { abbreviate } from 'abbreviate';
-// CommonJS: const { abbreviate } = require('abbreviate');
+import { abbrev } from 'abbrev';
+// CommonJS: const { abbrev } = require('abbrev');
 
-abbreviate('codigo-do-cliente'); // 'cdg-clnt'
-abbreviate('code-in-the-stock', {
+abbrev('codigo-do-cliente'); // 'cdg-clnt'
+abbrev('code-in-the-stock', {
   mode: 'custom',
   replacements: { the: '', code: 'cdg' },
 }); // 'cdg-stck'
-abbreviate('cliente', {
+abbrev('cliente', {
   mode: 'configurable',
   maxWordLength: 2,
 }); // 'cl'

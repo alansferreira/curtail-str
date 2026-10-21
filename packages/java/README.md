@@ -1,15 +1,15 @@
-# Abbreviate para Java
+# Abbrev para Java
 
 Compativel com Eclipse Temurin Java 8 ou superior. Sem dependencias de runtime.
 
 ```java
-import local.abbreviate.Abbreviate;
+import local.abbrev.Abbrev;
 
-String universal = Abbreviate.abbreviate("codigo-do-cliente");
+String universal = Abbrev.abbrev("codigo-do-cliente");
 // cdg-clnt
-String configurable = Abbreviate.abbreviate("cliente",
-    Abbreviate.Options.builder()
-        .mode(Abbreviate.Mode.CONFIGURABLE)
+String configurable = Abbrev.abbrev("cliente",
+    Abbrev.Options.builder()
+        .mode(Abbrev.Mode.CONFIGURABLE)
         .maxWordLength(2)
         .build());
 // cl
@@ -31,6 +31,6 @@ inteiros `long` em 1..2147483647; sao independentes e exclusivos do modo
 Nao ha traducao nem garantia de unicidade. `code` vira `cd` e `the` permanece
 `the` por padrao. Comprimentos usam pontos de codigo, nao unidades UTF-16.
 
-Build e testes: `mvn -B -ntp verify`. JAR: `target/abbreviate-0.1.0.jar`.
-Coordenadas locais: `local.abbreviate:abbreviate:0.1.0`. Os testes usam o
+Build e testes: `mvn -B -ntp verify`. JAR: `target/abbrev-0.1.0.jar`.
+Coordenadas locais: `org.alf:abbrev:0.1.0`. Os testes usam o
 corpus da raiz do monorepositorio; o JAR nao depende dele.

@@ -11,8 +11,8 @@ def main() -> None:
     source = root / "packages/shell"
     destination = source / "dist"
     destination.mkdir(exist_ok=True)
-    name = "abbreviate-shell-0.1.0"
-    files = ("abbreviate.sh", "abbreviate.bat", "abbreviate.ps1", "README.md")
+    name = "abbrev-shell-0.1.0"
+    files = ("abbrev.sh", "abbrev.bat", "abbrev.ps1", "README.md")
     archive = destination / f"{name}.tar.gz"
     with tarfile.open(archive, "w:gz") as output:
         for filename in files:

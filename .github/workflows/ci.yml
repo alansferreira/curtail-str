@@ -25,12 +25,12 @@ jobs:
         if: runner.os == 'Windows'
         shell: powershell
         run: |
-          $actual = & .\packages\shell\abbreviate.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
+          $actual = & .\packages\shell\abbrev.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
           if ($actual -ne "cdg-clnt-atv-estq") { throw "PowerShell 5.1 contract failed" }
       - run: python scripts/package_shell.py
       - uses: actions/upload-artifact@v4
         with:
-          name: abbreviate-shell-${{ matrix.os }}
+          name: abbrev-shell-${{ matrix.os }}
           path: packages/shell/dist/
 
   node:
@@ -85,8 +85,8 @@ jobs:
           cp packages/go/testdata/consumer/main.go "$RUNNER_TEMP/go-consumer/main.go"
           cd "$RUNNER_TEMP/go-consumer"
           go mod init example.com/consumer
-          go mod edit -replace "github.com/alansferreira/abbreviate/packages/go=$GITHUB_WORKSPACE/packages/go"
-          go get github.com/alansferreira/abbreviate/packages/go
+          go mod edit -replace "github.com/alansferreira/abbrev/packages/go=$GITHUB_WORKSPACE/packages/go"
+          go get github.com/alansferreira/abbrev/packages/go
           go run .
 
   java:
@@ -105,5 +105,5 @@ jobs:
       - name: Consume JAR without test or runtime dependencies
         run: |
           mkdir "$RUNNER_TEMP/java-consumer"
-          javac -cp packages/java/target/abbreviate-0.1.0.jar -d "$RUNNER_TEMP/java-consumer" packages/java/src/test/smoke/Consumer.java
-          java -cp "packages/java/target/abbreviate-0.1.0.jar:$RUNNER_TEMP/java-consumer" Consumer
+          javac -cp packages/java/target/abbrev-0.1.0.jar -d "$RUNNER_TEMP/java-consumer" packages/java/src/test/smoke/Consumer.java
+          java -cp "packages/java/target/abbrev-0.1.0.jar:$RUNNER_TEMP/java-consumer" Consumer

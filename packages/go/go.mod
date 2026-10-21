@@ -1,4 +1,4 @@
-module github.com/alansferreira/abbreviate/packages/go
+module github.com/alansferreira/abbrev/packages/go
 
 go 1.26.0
 

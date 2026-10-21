@@ -1,3 +1,3 @@
 import core from './index.cjs';
 
-export const { abbreviate } = core;
+export const { abbrev } = core;
