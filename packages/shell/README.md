@@ -1,17 +1,17 @@
-# Abbrev shell 0.1.0
+# Abrev shell 0.1.0
 
 Comando standalone, **modo universal apenas**. Nao exige Node.js, Python,
 Go, Java, pip ou npm para executar. Nao oferece mapas nem limites configuraveis.
-O nome da funcao principal em shell e PowerShell e `abbrev`; em batch,
-o processamento usa a subrotina `:abbrev`.
+O nome da funcao principal em shell e PowerShell e `abrev`; em batch,
+o processamento usa a subrotina `:abrev`.
 
 ## Plataformas e requisitos
 
 | Arquivo | Plataformas | Requisitos presentes no sistema |
 | --- | --- | --- |
-| `abbrev.sh` | Linux, macOS, BSD, WSL | `/bin/sh` e `awk` POSIX |
-| `abbrev.bat` | Windows 10/11, Windows Server | `cmd.exe`, sem PowerShell |
-| `abbrev.ps1` | Windows; Linux/macOS com PowerShell | Windows PowerShell 5.1+ ou PowerShell 7 |
+| `abrev.sh` | Linux, macOS, BSD, WSL | `/bin/sh` e `awk` POSIX |
+| `abrev.bat` | Windows 10/11, Windows Server | `cmd.exe`, sem PowerShell |
+| `abrev.ps1` | Windows; Linux/macOS com PowerShell | Windows PowerShell 5.1+ ou PowerShell 7 |
 
 Um unico argumento contem o texto; a saida vai para stdout com nova linha.
 `--help` no shell/batch e `-Help` no PowerShell exibem ajuda. Saida vazia
@@ -20,19 +20,19 @@ nao zero. `""` e uma entrada valida. Em PowerShell, informar `-Text ""`.
 Para texto com hifen inicial, preferir `-Text` no PowerShell.
 
 ```sh
-sh abbrev.sh "codigo-do-cliente-ativo-no-estoque"
+sh abrev.sh "codigo-do-cliente-ativo-no-estoque"
 # cdg-clnt-atv-estq
-sh abbrev.sh "active-customer-code-in-the-stock"
+sh abrev.sh "active-customer-code-in-the-stock"
 # actv-cstm-cd-the-stck
 ```
 
 ```bat
-abbrev.bat "codigo-do-cliente-ativo-no-estoque"
+abrev.bat "codigo-do-cliente-ativo-no-estoque"
 REM cdg-clnt-atv-estq
 ```
 
 ```powershell
-.\abbrev.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
+.\abrev.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
 # cdg-clnt-atv-estq
 ```
 
@@ -69,11 +69,11 @@ interpolados em comandos. Eles nao sao parsers de linhas de comando.
 
 ## Download HTTP
 
-Os arquivos gerados sao `abbrev-shell-0.1.0.tar.gz`,
-`abbrev-shell-0.1.0.zip` e `SHA256SUMS`, versionados em `packages/shell/dist/`.
+Os arquivos gerados sao `abrev-shell-0.1.0.tar.gz`,
+`abrev-shell-0.1.0.zip` e `SHA256SUMS`, versionados em `packages/shell/dist/`.
 O download usa o proprio repositorio GitHub, sem Releases ou servidor adicional:
 
-`https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist`
+`https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist`
 
 Os links ficam disponiveis depois do commit e push dos arquivos para `main`.
 Para downloads imutaveis e reproduziveis, substitua `main` pelo SHA de um commit
@@ -82,41 +82,41 @@ ou por uma tag publicada. A branch `main` acompanha as alteracoes do projeto.
 Unix, com curl:
 
 ```sh
-base='https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist'
-curl -fL "$base/abbrev-shell-0.1.0.tar.gz" -o abbrev-shell-0.1.0.tar.gz
+base='https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist'
+curl -fL "$base/abrev-shell-0.1.0.tar.gz" -o abrev-shell-0.1.0.tar.gz
 curl -fL "$base/SHA256SUMS" -o SHA256SUMS
 # Compare o hash com uma fonte confiavel antes de extrair/executar:
-sha256sum abbrev-shell-0.1.0.tar.gz
-# macOS: shasum -a 256 abbrev-shell-0.1.0.tar.gz
-tar -xzf abbrev-shell-0.1.0.tar.gz
-sh abbrev-shell-0.1.0/abbrev.sh "codigo-do-cliente"
+sha256sum abrev-shell-0.1.0.tar.gz
+# macOS: shasum -a 256 abrev-shell-0.1.0.tar.gz
+tar -xzf abrev-shell-0.1.0.tar.gz
+sh abrev-shell-0.1.0/abrev.sh "codigo-do-cliente"
 ```
 
 Com wget, substituir cada `curl -fL URL -o ARQUIVO` por
-`wget -O ARQUIVO URL`. Pode-se instalar manualmente `abbrev.sh` como
-`~/.local/bin/abbrev`, dar permissao com `chmod +x` e adicionar esse
+`wget -O ARQUIVO URL`. Pode-se instalar manualmente `abrev.sh` como
+`~/.local/bin/abrev`, dar permissao com `chmod +x` e adicionar esse
 diretorio ao PATH. Nao precisa de sudo.
 
 Windows PowerShell:
 
 ```powershell
-$base = 'https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist'
-Invoke-WebRequest -UseBasicParsing "$base/abbrev-shell-0.1.0.zip" -OutFile abbrev-shell-0.1.0.zip
+$base = 'https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist'
+Invoke-WebRequest -UseBasicParsing "$base/abrev-shell-0.1.0.zip" -OutFile abrev-shell-0.1.0.zip
 Invoke-WebRequest -UseBasicParsing "$base/SHA256SUMS" -OutFile SHA256SUMS
-Get-FileHash abbrev-shell-0.1.0.zip -Algorithm SHA256
+Get-FileHash abrev-shell-0.1.0.zip -Algorithm SHA256
 # Compare com o hash confiavel antes de extrair:
-Expand-Archive abbrev-shell-0.1.0.zip -DestinationPath .
-.\abbrev-shell-0.1.0\abbrev.bat "codigo-do-cliente"
+Expand-Archive abrev-shell-0.1.0.zip -DestinationPath .
+.\abrev-shell-0.1.0\abrev.bat "codigo-do-cliente"
 ```
 
 No CMD do Windows 10/11 com `curl.exe` e `tar.exe` disponiveis:
 
 ```bat
-curl.exe -fL https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist/abbrev-shell-0.1.0.zip -o abbrev-shell-0.1.0.zip
-certutil -hashfile abbrev-shell-0.1.0.zip SHA256
+curl.exe -fL https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist/abrev-shell-0.1.0.zip -o abrev-shell-0.1.0.zip
+certutil -hashfile abrev-shell-0.1.0.zip SHA256
 REM Compare com o hash confiavel antes de extrair:
-tar.exe -xf abbrev-shell-0.1.0.zip
-abbrev-shell-0.1.0\abbrev.bat "codigo-do-cliente"
+tar.exe -xf abrev-shell-0.1.0.zip
+abrev-shell-0.1.0\abrev.bat "codigo-do-cliente"
 ```
 
 Checksum baixado do mesmo servidor detecta corrupcao, nao autentica um host
@@ -129,20 +129,20 @@ organizacao; nao e necessario desabilita-la para usar o `.bat`.
 Cada script e independente e pode ser baixado sem o pacote:
 
 ```sh
-curl -fL https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/abbrev.sh -o abbrev.sh
+curl -fL https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/abrev.sh -o abrev.sh
 # Alternativa:
-# wget -O abbrev.sh https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/abbrev.sh
-sh abbrev.sh "codigo-do-cliente"
+# wget -O abrev.sh https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/abrev.sh
+sh abrev.sh "codigo-do-cliente"
 ```
 
 ```powershell
-Invoke-WebRequest -UseBasicParsing https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/abbrev.ps1 -OutFile abbrev.ps1
-.\abbrev.ps1 -Text "codigo-do-cliente"
+Invoke-WebRequest -UseBasicParsing https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/abrev.ps1 -OutFile abrev.ps1
+.\abrev.ps1 -Text "codigo-do-cliente"
 ```
 
 ```bat
-curl.exe -fL https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/abbrev.bat -o abbrev.bat
-abbrev.bat "codigo-do-cliente"
+curl.exe -fL https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/abrev.bat -o abrev.bat
+abrev.bat "codigo-do-cliente"
 ```
 
 ## Geracao e testes (somente desenvolvimento)

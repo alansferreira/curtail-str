@@ -1,4 +1,4 @@
-# Abbrev
+# Abrev
 
 Microbibliotecas puras para abreviar identificadores em Node.js, Python, Go e
 Java. Mesmas regras, tres modos explicitos, sem dicionarios de idiomas.
@@ -45,10 +45,10 @@ Consulte o [contrato normativo](./spec/algorithm.md) e os
 
 | Linguagem | Minimo | API e instrucoes |
 | --- | --- | --- |
-| Node.js | 22 | [abbrev](./packages/node/README.md), ESM/CommonJS e tipos TypeScript |
-| Python | 3.11 | [abbrev](./packages/python/README.md), pacote tipado |
-| Go | 1.26 | [Abbrev](./packages/go/README.md), retorno `(string, error)` |
-| Java | 8, Eclipse Temurin | [Abbrev.abbrev](./packages/java/README.md), JAR sem dependencias de runtime |
+| Node.js | 22 | [abrev](./packages/node/README.md), ESM/CommonJS e tipos TypeScript |
+| Python | 3.11 | [abrev](./packages/python/README.md), pacote tipado |
+| Go | 1.26 | [Abrev](./packages/go/README.md), retorno `(string, error)` |
+| Java | 8, Eclipse Temurin | [Abrev.abrev](./packages/java/README.md), JAR sem dependencias de runtime |
 
 | Opcao | Node.js / Java | Python | Go | Padrao |
 | --- | --- | --- | --- | --- |
@@ -64,24 +64,23 @@ opcionais nos limites. Consulte os exemplos por pacote.
 ### Instalacao local
 
 Os nomes abaixo sao locais/provisorios; nenhum pacote foi publicado.
-O nome `abbrev` ja pertence a outro projeto no registro npm. Por enquanto,
-instale este pacote Node.js pelo caminho local; `npm install abbrev` baixa
-outro pacote. Uma futura publicacao npm exigira um escopo disponivel, mantendo
-`abbrev` como nome da funcao e do repositorio.
+Instale este pacote Node.js pelo caminho local ate a publicacao.
+O registro npm nao retornou um pacote `abrev` na consulta de 21/10/2026;
+isso nao reserva o nome nem garante sua disponibilidade futura.
 
 ```sh
 # Node.js, a partir de um projeto consumidor
-npm install /caminho/abbrev/packages/node
+npm install /caminho/abrev/packages/node
 
 # Python
-python -m pip install /caminho/abbrev/packages/python
+python -m pip install /caminho/abrev/packages/python
 
 # Go, dentro do modulo consumidor
-go mod edit -replace github.com/alansferreira/abbrev/packages/go=/caminho/abbrev/packages/go
-go get github.com/alansferreira/abbrev/packages/go
+go mod edit -replace github.com/alansferreira/abrev/packages/go=/caminho/abrev/packages/go
+go get github.com/alansferreira/abrev/packages/go
 
-# Java: instalar coordenadas org.alf:abbrev:0.1.0 no Maven local
-mvn -B -ntp -f /caminho/abbrev/packages/java/pom.xml install
+# Java: instalar coordenadas org.alf:abrev:0.1.0 no Maven local
+mvn -B -ntp -f /caminho/abrev/packages/java/pom.xml install
 ```
 
 Node.js, Python e Java nao possuem dependencias de runtime. Go utiliza
@@ -96,7 +95,7 @@ limitacoes diferentes por plataforma, documentadas no pacote; nao ha
 paridade Unicode garantida com as bibliotecas.
 
 ```sh
-sh packages/shell/abbrev.sh "codigo-do-cliente-ativo-no-estoque"
+sh packages/shell/abrev.sh "codigo-do-cliente-ativo-no-estoque"
 # cdg-clnt-atv-estq
 python3 scripts/package_shell.py
 ```
@@ -105,13 +104,13 @@ O build gera TAR.GZ, ZIP e SHA-256 versionados em `packages/shell/dist/`.
 O download usa o proprio repositorio GitHub, sem Releases:
 
 ```sh
-curl -fL https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/abbrev.sh -o abbrev.sh
-sh abbrev.sh "codigo-do-cliente"
+curl -fL https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/abrev.sh -o abrev.sh
+sh abrev.sh "codigo-do-cliente"
 ```
 
-[Baixar TAR.GZ](https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist/abbrev-shell-0.1.0.tar.gz),
-[ZIP](https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist/abbrev-shell-0.1.0.zip)
-e [SHA-256](https://raw.githubusercontent.com/alansferreira/abbrev/main/packages/shell/dist/SHA256SUMS).
+[Baixar TAR.GZ](https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist/abrev-shell-0.1.0.tar.gz),
+[ZIP](https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist/abrev-shell-0.1.0.zip)
+e [SHA-256](https://raw.githubusercontent.com/alansferreira/abrev/main/packages/shell/dist/SHA256SUMS).
 Os links funcionam apos commit e push para `main`; use SHA de commit ou tag
 no lugar de `main` para fixar uma versao imutavel. O guia do pacote inclui
 curl, wget e Invoke-WebRequest. A CI testa Linux/macOS/Windows e tambem

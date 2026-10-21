@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	abbrev "github.com/alansferreira/abbrev/packages/go"
+	abrev "github.com/alansferreira/abrev/packages/go"
 )
 
 func main() {
-	result, err := abbrev.Abbrev("codigo-do-cliente")
+	result, err := abrev.Abrev("codigo-do-cliente")
 	if err != nil {
 		panic(err)
 	}

@@ -1,4 +1,4 @@
-# Abbrev para Go
+# Abrev para Go
 
 Go 1.26 ou superior. Dependencia de runtime: `golang.org/x/text/unicode/norm`
 para normalizacao Unicode.
@@ -9,13 +9,13 @@ package main
 import (
     "fmt"
     "log"
-    abbrev "github.com/alansferreira/abbrev/packages/go"
+    abrev "github.com/alansferreira/abrev/packages/go"
 )
 
 func main() {
     maximum := int64(2)
-    result, err := abbrev.Abbrev("cliente", abbrev.Options{
-        Mode: abbrev.Configurable,
+    result, err := abrev.Abrev("cliente", abrev.Options{
+        Mode: abrev.Configurable,
         MaxWordLength: &maximum,
     })
     if err != nil {

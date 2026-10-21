@@ -13,7 +13,7 @@ def main() -> None:
     tests = Path(__file__).resolve().parents[1] / "packages/python/tests"
     for argument in sys.argv[1:]:
         distribution = Path(argument).resolve(strict=True)
-        with tempfile.TemporaryDirectory(prefix="abbrev-python-") as directory:
+        with tempfile.TemporaryDirectory(prefix="abrev-python-") as directory:
             venv.create(directory, with_pip=False)
             executable = "Scripts/python.exe" if sys.platform == "win32" else "bin/python"
             python = Path(directory) / executable
@@ -30,7 +30,7 @@ def main() -> None:
             subprocess.run(
                 [str(python), "-I", "-c",
                  "from importlib.resources import files; "
-                 "assert files('abbrev').joinpath('py.typed').is_file()"],
+                 "assert files('abrev').joinpath('py.typed').is_file()"],
                 cwd=directory,
                 check=True,
             )

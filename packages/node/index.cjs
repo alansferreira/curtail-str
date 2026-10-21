@@ -45,7 +45,7 @@ function compress(word, maximum) {
   return result.slice(0, maximum).join('');
 }
 
-function abbrev(input, options = {}) {
+function abrev(input, options = {}) {
   record(options);
   for (const key of Reflect.ownKeys(options)) {
     if (!allowedOptions.has(key)) throw new TypeError(`Unknown option: ${String(key)}`);
@@ -104,4 +104,4 @@ function abbrev(input, options = {}) {
   return output.join('-');
 }
 
-module.exports = { abbrev };
+module.exports = { abrev };

@@ -1,5 +1,5 @@
 {
-  "name": "abbrev",
+  "name": "abrev",
   "version": "0.1.0",
   "description": "Pure, configurable identifier abbreviation without dictionaries",
   "engines": {"node": ">=22"},

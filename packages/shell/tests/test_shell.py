@@ -26,23 +26,23 @@ class ShellTest(unittest.TestCase):
             if text is None or not text.isascii():
                 continue
             with self.subTest(name=case["name"]):
-                self.check_command(["sh", str(PACKAGE / "abbrev.sh")], text, case["expected"])
+                self.check_command(["sh", str(PACKAGE / "abrev.sh")], text, case["expected"])
         for text, expected in [
             ("", ""), ("CODE_IN_THE_STOCK", "cd-the-stck"),
             ("abc\ncodigo", "abc-cdg"), ("abc\\ndef", "abc\\"),
             ("a!!b", "a!!b"), ("$HOME xyz", "$hm-xyz"),
         ]:
             with self.subTest(text=text):
-                self.check_command(["sh", str(PACKAGE / "abbrev.sh")], text, expected)
+                self.check_command(["sh", str(PACKAGE / "abrev.sh")], text, expected)
 
     @unittest.skipUnless(os.name != "nt" and shutil.which("awk"), "Requires POSIX shell and awk")
     def test_posix_arguments(self):
-        command = ["sh", str(PACKAGE / "abbrev.sh")]
+        command = ["sh", str(PACKAGE / "abrev.sh")]
         for arguments in ([], ["one", "two"]):
             result = subprocess.run(command + arguments, capture_output=True, text=True)
             self.assertEqual(result.returncode, 2)
             self.assertTrue(result.stderr)
-        self.check_command(command, "--help", "Usage: sh abbrev.sh \"text\"\n"
+        self.check_command(command, "--help", "Usage: sh abrev.sh \"text\"\n"
                            "Universal mode. Requires POSIX awk; Unicode behavior depends on awk and locale.")
 
     @unittest.skipUnless(os.name == "nt", "Requires native Windows CMD")
@@ -54,7 +54,7 @@ class ShellTest(unittest.TestCase):
             ("batata assassino", "bt-asn"), ("a1122", "a112"),
         ]:
             with self.subTest(text=text):
-                command = f'call "{PACKAGE / "abbrev.bat"}" "{text}"'
+                command = f'call "{PACKAGE / "abrev.bat"}" "{text}"'
                 result = subprocess.run(["cmd.exe", "/d", "/c", command],
                                         capture_output=True, text=True, check=True)
                 self.assertEqual(result.stdout.rstrip("\r\n"), expected)
@@ -71,7 +71,7 @@ class ShellTest(unittest.TestCase):
         ]:
             with self.subTest(text=text):
                 self.check_command(
-                    [executable, "-NoProfile", "-File", str(PACKAGE / "abbrev.ps1"), "-Text"],
+                    [executable, "-NoProfile", "-File", str(PACKAGE / "abrev.ps1"), "-Text"],
                     text, expected,
                 )
 

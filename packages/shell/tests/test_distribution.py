@@ -16,8 +16,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[3]
 DIST = ROOT / "packages/shell/dist"
-NAME = "abbrev-shell-0.1.0"
-FILES = {"abbrev.sh", "abbrev.bat", "abbrev.ps1", "README.md"}
+NAME = "abrev-shell-0.1.0"
+FILES = {"abrev.sh", "abrev.bat", "abrev.ps1", "README.md"}
 
 
 class DistributionTest(unittest.TestCase):
@@ -31,10 +31,10 @@ class DistributionTest(unittest.TestCase):
             self.assertEqual(hashlib.sha256((DIST / filename).read_bytes()).hexdigest(), expected)
         with tarfile.open(DIST / f"{NAME}.tar.gz") as archive:
             self.assertEqual(set(archive.getnames()), {f"{NAME}/{name}" for name in FILES})
-            self.assertEqual(archive.getmember(f"{NAME}/abbrev.sh").mode, 0o755)
+            self.assertEqual(archive.getmember(f"{NAME}/abrev.sh").mode, 0o755)
         with zipfile.ZipFile(DIST / f"{NAME}.zip") as archive:
             self.assertEqual(set(archive.namelist()), {f"{NAME}/{name}" for name in FILES})
-            for name in ("abbrev.bat", "abbrev.ps1"):
+            for name in ("abrev.bat", "abrev.ps1"):
                 data = archive.read(f"{NAME}/{name}")
                 self.assertIn(b"\r\n", data)
                 self.assertNotIn(b"\n", data.replace(b"\r\n", b""))
@@ -50,9 +50,9 @@ class DistributionTest(unittest.TestCase):
             result = subprocess.run(["curl", "-fsSL", url], capture_output=True, check=True)
             self.assertEqual(result.stdout, (DIST / f"{NAME}.tar.gz").read_bytes())
             with tarfile.open(fileobj=io.BytesIO(result.stdout)) as archive:
-                with tempfile.TemporaryDirectory(prefix="abbrev-shell-") as directory:
-                    script = Path(directory) / "abbrev.sh"
-                    with archive.extractfile(f"{NAME}/abbrev.sh") as content:
+                with tempfile.TemporaryDirectory(prefix="abrev-shell-") as directory:
+                    script = Path(directory) / "abrev.sh"
+                    with archive.extractfile(f"{NAME}/abrev.sh") as content:
                         script.write_bytes(content.read())
                     output = subprocess.run(
                         ["sh", str(script), "codigo-do-cliente-ativo-no-estoque"],
