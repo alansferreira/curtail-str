@@ -9,6 +9,30 @@ permissions:
   contents: read
 
 jobs:
+  shell:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m unittest discover -s packages/shell/tests -v
+      - name: Test Windows PowerShell 5.1
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $actual = & .\packages\shell\abbreviate.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
+          if ($actual -ne "cdg-clnt-atv-estq") { throw "PowerShell 5.1 contract failed" }
+      - run: python scripts/package_shell.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: abbreviate-shell-${{ matrix.os }}
+          path: packages/shell/dist/
+
   node:
     runs-on: ubuntu-latest
     strategy:

@@ -5,4 +5,9 @@ __pycache__/
 .venv/
 build/
 dist/
+!packages/shell/dist/
+packages/shell/dist/*
+!packages/shell/dist/abbreviate-shell-0.1.0.tar.gz
+!packages/shell/dist/abbreviate-shell-0.1.0.zip
+!packages/shell/dist/SHA256SUMS
 target/

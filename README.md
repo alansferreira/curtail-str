@@ -83,6 +83,36 @@ mvn -B -ntp -f /caminho/abbreviate/packages/java/pom.xml install
 Node.js, Python e Java nao possuem dependencias de runtime. Go utiliza
 `golang.org/x/text` para normalizacao Unicode.
 
+## Pacote de terminal sem runtime adicional
+
+O [pacote shell](./packages/shell/README.md) inclui tres scripts independentes:
+POSIX `sh`/`awk` para Unix, `.bat` puro para CMD e `.ps1` para PowerShell.
+Oferece inicialmente apenas o modo universal. Unicode e aceito com
+limitacoes diferentes por plataforma, documentadas no pacote; nao ha
+paridade Unicode garantida com as bibliotecas.
+
+```sh
+sh packages/shell/abbreviate.sh "codigo-do-cliente-ativo-no-estoque"
+# cdg-clnt-atv-estq
+python3 scripts/package_shell.py
+```
+
+O build gera TAR.GZ, ZIP e SHA-256 versionados em `packages/shell/dist/`.
+O download usa o proprio repositorio GitHub, sem Releases:
+
+```sh
+curl -fL https://raw.githubusercontent.com/alansferreira/abbreviate/main/packages/shell/abbreviate.sh -o abbreviate.sh
+sh abbreviate.sh "codigo-do-cliente"
+```
+
+[Baixar TAR.GZ](https://raw.githubusercontent.com/alansferreira/abbreviate/main/packages/shell/dist/abbreviate-shell-0.1.0.tar.gz),
+[ZIP](https://raw.githubusercontent.com/alansferreira/abbreviate/main/packages/shell/dist/abbreviate-shell-0.1.0.zip)
+e [SHA-256](https://raw.githubusercontent.com/alansferreira/abbreviate/main/packages/shell/dist/SHA256SUMS).
+Os links funcionam apos commit e push para `main`; use SHA de commit ou tag
+no lugar de `main` para fixar uma versao imutavel. O guia do pacote inclui
+curl, wget e Invoke-WebRequest. A CI testa Linux/macOS/Windows e tambem
+disponibiliza os arquivos como artifacts.
+
 ## Testes e distribuicao
 
 Executar a partir da raiz do monorepositorio:
@@ -148,5 +178,5 @@ em uma nova versao apropriada.
 - Strings Unicode malformadas sao rejeitadas, nao reparadas silenciosamente.
 - Nenhum parametro e alterado; consumidores nao devem modificar mapas
   concorrentemente durante chamadas.
-- Publicacao, licenca de distribuicao, nomes definitivos de registro, CLI,
+- Publicacao, licenca de distribuicao, nomes definitivos de registro,
   traducoes e integracao Git ficam para uma etapa posterior.
