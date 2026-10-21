@@ -1,0 +1,20 @@
+{
+  "name": "abbreviate",
+  "version": "0.1.0",
+  "description": "Pure, configurable identifier abbreviation without dictionaries",
+  "engines": {"node": ">=22"},
+  "main": "./index.cjs",
+  "types": "./index.d.cts",
+  "exports": {
+    ".": {
+      "import": {"types": "./index.d.mts", "default": "./index.mjs"},
+      "require": {"types": "./index.d.cts", "default": "./index.cjs"}
+    }
+  },
+  "files": ["index.cjs", "index.mjs", "index.d.cts", "index.d.mts"],
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "typecheck": "tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 test/consumer.mts test/consumer.cts"
+  },
+  "devDependencies": {"typescript": "^5.9.3"}
+}

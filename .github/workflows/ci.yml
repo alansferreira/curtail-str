@@ -1,0 +1,85 @@
+name: Verify packages
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24', '26']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+        working-directory: packages/node
+      - run: npm test && npm run typecheck && node test/package-smoke.cjs
+        working-directory: packages/node
+
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.12', '3.13', '3.14', '3.15']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e packages/python build
+      - run: python -m unittest discover -s packages/python/tests -v
+      - run: python -m build packages/python
+      - run: python scripts/check_python_distribution.py packages/python/dist/*.whl packages/python/dist/*.tar.gz
+
+  go:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ['1.26.x', '1.27.x']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+          cache-dependency-path: packages/go/go.sum
+      - run: go test -race ./... && go vet ./...
+        working-directory: packages/go
+      - name: Consume module outside the repository
+        run: |
+          mkdir "$RUNNER_TEMP/go-consumer"
+          cp packages/go/testdata/consumer/main.go "$RUNNER_TEMP/go-consumer/main.go"
+          cd "$RUNNER_TEMP/go-consumer"
+          go mod init example.com/consumer
+          go mod edit -replace "github.com/alansferreira/abbreviate/packages/go=$GITHUB_WORKSPACE/packages/go"
+          go get github.com/alansferreira/abbreviate/packages/go
+          go run .
+
+  java:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['8', '11', '17', '21', '25', '27']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - run: mvn -B -ntp -f packages/java/pom.xml verify
+      - name: Consume JAR without test or runtime dependencies
+        run: |
+          mkdir "$RUNNER_TEMP/java-consumer"
+          javac -cp packages/java/target/abbreviate-0.1.0.jar -d "$RUNNER_TEMP/java-consumer" packages/java/src/test/smoke/Consumer.java
+          java -cp "packages/java/target/abbreviate-0.1.0.jar:$RUNNER_TEMP/java-consumer" Consumer
