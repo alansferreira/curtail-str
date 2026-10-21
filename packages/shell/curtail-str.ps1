@@ -8,7 +8,7 @@ param(
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
 
-function abrev {
+function curtailStr {
     param([AllowEmptyString()][string] $Value)
 
     $output = New-Object 'System.Collections.Generic.List[string]'
@@ -34,15 +34,15 @@ function abrev {
 
 try {
     if ($Help) {
-        Write-Output 'Usage: .\abrev.ps1 -Text "text"'
+        Write-Output 'Usage: .\curtail-str.ps1 -Text "text"'
         Write-Output 'Universal mode. Windows PowerShell 5.1+ or PowerShell 7.'
         exit 0
     }
     if (-not $PSBoundParameters.ContainsKey('Text')) {
-        [Console]::Error.WriteLine('Usage: .\abrev.ps1 -Text "text"')
+        [Console]::Error.WriteLine('Usage: .\curtail-str.ps1 -Text "text"')
         exit 2
     }
-    Write-Output (abrev $Text)
+    Write-Output (curtailStr $Text)
     exit 0
 } catch {
     [Console]::Error.WriteLine($_.Exception.Message)

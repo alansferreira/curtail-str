@@ -6,7 +6,7 @@ const path = require('node:path');
 const { createRequire } = require('node:module');
 
 const source = path.resolve(__dirname, '..');
-const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'abrev-node-'));
+const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'curtail-str-node-'));
 try {
   const packed = JSON.parse(execFileSync('npm', [
     'pack', '--json', '--pack-destination', temporary,
@@ -16,10 +16,10 @@ try {
     path.join(temporary, packed[0].filename),
   ], { stdio: 'pipe' });
   const requireInstalled = createRequire(path.join(temporary, 'consumer.cjs'));
-  assert.equal(requireInstalled('abrev')
-    .abrev('codigo'), 'cdg');
+  assert.equal(requireInstalled('curtail-str')
+    .curtailStr('codigo'), 'cdg');
   execFileSync(process.execPath, ['--input-type=module', '-e', `
-    import { abrev as shorten } from 'abrev';
+    import { curtailStr as shorten } from 'curtail-str';
     if (shorten('codigo') !== 'cdg') throw new Error('ESM package import failed');
   `], { cwd: temporary, stdio: 'inherit' });
   for (const file of ['consumer.cts', 'consumer.mts']) {

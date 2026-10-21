@@ -1,5 +1,5 @@
-// Package abrev provides pure, dictionary-free identifier abbreviation.
-package abrev
+// Package curtailstr provides pure, dictionary-free identifier abbreviation.
+package curtailstr
 
 import (
 	"fmt"
@@ -74,10 +74,10 @@ func compress(word string, maximum int) string {
 	return string(result)
 }
 
-// Abrev abbrevs input without mutating options or maps.
+// CurtailStr abbrevs input without mutating options or maps.
 // Supply zero or one Options value. Invalid options and invalid UTF-8 return
 // an error, even for empty input. The zero Mode means Universal.
-func Abrev(input string, supplied ...Options) (string, error) {
+func CurtailStr(input string, supplied ...Options) (string, error) {
 	if len(supplied) > 1 {
 		return "", fmt.Errorf("expected at most one Options value")
 	}

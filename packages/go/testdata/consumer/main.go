@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	abrev "github.com/alansferreira/abrev/packages/go"
+	curtailstr "github.com/alansferreira/curtail-str/packages/go"
 )
 
 func main() {
-	result, err := abrev.Abrev("codigo-do-cliente")
+	result, err := curtailstr.CurtailStr("codigo-do-cliente")
 	if err != nil {
 		panic(err)
 	}

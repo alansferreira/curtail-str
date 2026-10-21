@@ -1,4 +1,4 @@
-package local.abrev;
+package local.curtailstr;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /** Pure, dictionary-free identifier abbreviation. */
-public final class Abrev {
+public final class CurtailStr {
     private static final Pattern SEPARATORS = Pattern.compile(
         "[-_\\x{0009}-\\x{000d}\\x{0020}\\x{0085}\\x{00a0}\\x{1680}"
         + "\\x{2000}-\\x{200a}\\x{2028}\\x{2029}\\x{202f}\\x{205f}\\x{3000}]+");
 
-    private Abrev() {}
+    private CurtailStr() {}
 
     public enum Mode { UNIVERSAL, CUSTOM, CONFIGURABLE }
 
@@ -133,12 +133,12 @@ public final class Abrev {
         return value.intValue();
     }
 
-    public static String abrev(String input) {
-        return abrev(input, null);
+    public static String curtailStr(String input) {
+        return curtailStr(input, null);
     }
 
     /** Null input returns empty; invalid options throw IllegalArgumentException. */
-    public static String abrev(String input, Options supplied) {
+    public static String curtailStr(String input, Options supplied) {
         Options options = supplied == null ? Options.builder().build() : supplied;
         if (options.mode == Mode.UNIVERSAL && options.replacements != null) {
             throw new IllegalArgumentException("Replacements require custom or configurable mode");

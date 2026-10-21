@@ -1,4 +1,4 @@
-package abrev
+package curtailstr
 
 import (
 	"encoding/json"
@@ -44,7 +44,7 @@ func TestSharedContract(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			got, err := Abrev(input, options)
+			got, err := CurtailStr(input, options)
 			if item.Error {
 				if err == nil {
 					t.Fatal("expected error")
@@ -53,7 +53,7 @@ func TestSharedContract(t *testing.T) {
 				t.Fatalf("got %q, %v; want %q", got, err, item.Expected)
 			}
 			if !item.Error {
-				repeated, repeatErr := Abrev(input, options)
+				repeated, repeatErr := CurtailStr(input, options)
 				if repeatErr != nil || repeated != got {
 					t.Fatalf("non-repeatable result: %q, %v", repeated, repeatErr)
 				}
@@ -70,19 +70,19 @@ func TestSharedContract(t *testing.T) {
 }
 
 func TestNativeContract(t *testing.T) {
-	if got, err := Abrev("codigo"); err != nil || got != "cdg" {
+	if got, err := CurtailStr("codigo"); err != nil || got != "cdg" {
 		t.Fatalf("default call: %q, %v", got, err)
 	}
-	if _, err := Abrev("", Options{}, Options{}); err == nil {
+	if _, err := CurtailStr("", Options{}, Options{}); err == nil {
 		t.Fatal("expected error for multiple options")
 	}
-	if _, err := Abrev("\xff"); err == nil {
+	if _, err := CurtailStr("\xff"); err == nil {
 		t.Fatal("expected error for invalid UTF-8")
 	}
 	for _, replacements := range []map[string]string{
 		{"abc": "\xff"}, {"\xff": "x"},
 	} {
-		if _, err := Abrev("", Options{
+		if _, err := CurtailStr("", Options{
 			Mode: Custom, Replacements: replacements,
 		}); err == nil {
 			t.Fatal("expected error for invalid UTF-8 in map")

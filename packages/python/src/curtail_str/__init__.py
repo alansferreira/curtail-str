@@ -49,8 +49,8 @@ def _compress(word: str, maximum: int) -> str:
     return "".join(result[:maximum])
 
 
-def abrev(value: str | None, options: Options | None = None) -> str:
-    """Abrev a key, raising TypeError/ValueError for invalid arguments."""
+def curtail_str(value: str | None, options: Options | None = None) -> str:
+    """Shorten a key, raising TypeError/ValueError for invalid arguments."""
     supplied = {} if options is None else options
     if not isinstance(supplied, Mapping):
         raise TypeError("Options must be a mapping")
@@ -101,4 +101,4 @@ def abrev(value: str | None, options: Options | None = None) -> str:
     return "-".join(output)
 
 
-__all__ = ["Options", "abrev"]
+__all__ = ["Options", "curtail_str"]

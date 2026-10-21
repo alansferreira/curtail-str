@@ -1,20 +1,20 @@
-# Abrev para Node.js
+# Curtail-str para Node.js
 
 Node.js 22 ou superior. Pacote local, sem dependencias de runtime.
 Este pacote ainda nao foi publicado: instale pelo caminho local.
 Os imports abaixo resolvem o pacote local instalado. O registro npm nao
-retornou um pacote `abrev` em 21/10/2026; o nome ainda nao foi reservado.
+retornou um pacote `curtail-str` em 21/10/2026; o nome ainda nao foi reservado.
 
 ```js
-import { abrev } from 'abrev';
-// CommonJS: const { abrev } = require('abrev');
+import { curtailStr } from 'curtail-str';
+// CommonJS: const { curtailStr } = require('curtail-str');
 
-abrev('codigo-do-cliente'); // 'cdg-clnt'
-abrev('code-in-the-stock', {
+curtailStr('codigo-do-cliente'); // 'cdg-clnt'
+curtailStr('code-in-the-stock', {
   mode: 'custom',
   replacements: { the: '', code: 'cdg' },
 }); // 'cdg-stck'
-abrev('cliente', {
+curtailStr('cliente', {
   mode: 'configurable',
   maxWordLength: 2,
 }); // 'cl'

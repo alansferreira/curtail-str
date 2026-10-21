@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import unittest
 
-from abrev import abrev
+from curtail_str import curtail_str
 
 
 class ContractTest(unittest.TestCase):
@@ -20,20 +20,20 @@ class ContractTest(unittest.TestCase):
                 snapshot = copy.deepcopy(options)
                 if item.get("error"):
                     with self.assertRaises((TypeError, ValueError)):
-                        abrev(item["input"], options)
+                        curtail_str(item["input"], options)
                 else:
                     self.assertEqual(
-                        abrev(item["input"], options), item["expected"]
+                        curtail_str(item["input"], options), item["expected"]
                     )
                     self.assertEqual(
-                        abrev(item["input"], options), item["expected"]
+                        curtail_str(item["input"], options), item["expected"]
                     )
                 self.assertEqual(options, snapshot)
 
     def test_dynamic_errors(self):
         for value in [1, [], {}, True, "\ud800"]:
             with self.subTest(value=repr(value)), self.assertRaises(TypeError):
-                abrev(value)
+                curtail_str(value)
         for options in [
             [], {"unknown": 1}, {"mode": None},
             {"mode": "configurable", "max_word_length": True},
@@ -43,7 +43,7 @@ class ContractTest(unittest.TestCase):
             {"mode": "custom", "replacements": {"abc": "\ud800"}},
         ]:
             with self.subTest(options=repr(options)), self.assertRaises((TypeError, ValueError)):
-                abrev("", options)
+                curtail_str("", options)
 
 
 if __name__ == "__main__":

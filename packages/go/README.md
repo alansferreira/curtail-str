@@ -1,4 +1,4 @@
-# Abrev para Go
+# Curtail-str para Go
 
 Go 1.26 ou superior. Dependencia de runtime: `golang.org/x/text/unicode/norm`
 para normalizacao Unicode.
@@ -9,13 +9,13 @@ package main
 import (
     "fmt"
     "log"
-    abrev "github.com/alansferreira/abrev/packages/go"
+    curtailstr "github.com/alansferreira/curtail-str/packages/go"
 )
 
 func main() {
     maximum := int64(2)
-    result, err := abrev.Abrev("cliente", abrev.Options{
-        Mode: abrev.Configurable,
+    result, err := curtailstr.CurtailStr("cliente", curtailstr.Options{
+        Mode: curtailstr.Configurable,
         MaxWordLength: &maximum,
     })
     if err != nil {

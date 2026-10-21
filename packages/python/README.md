@@ -1,16 +1,16 @@
-# Abrev para Python
+# Curtail-str para Python
 
 Python 3.11 ou superior, sem dependencias de runtime.
 
 ```python
-from abrev import abrev
+from curtail_str import curtail_str
 
-assert abrev("codigo-do-cliente") == "cdg-clnt"
-assert abrev("code-in-the-stock", {
+assert curtail_str("codigo-do-cliente") == "cdg-clnt"
+assert curtail_str("code-in-the-stock", {
     "mode": "custom",
     "replacements": {"the": "", "code": "cdg"},
 }) == "cdg-stck"
-assert abrev("cliente", {
+assert curtail_str("cliente", {
     "mode": "configurable", "max_word_length": 2,
 }) == "cl"
 ```

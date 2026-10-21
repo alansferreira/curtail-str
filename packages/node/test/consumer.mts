@@ -1,7 +1,7 @@
-import { abrev, type Options } from 'abrev';
+import { curtailStr, type Options } from 'curtail-str';
 
 const options: Options = { mode: 'configurable', maxWordLength: 2 };
-const result: string = abrev('codigo', options);
+const result: string = curtailStr('codigo', options);
 void result;
 // @ts-expect-error Limits require configurable mode.
-abrev('codigo', { mode: 'custom', maxWordLength: 2 });
+curtailStr('codigo', { mode: 'custom', maxWordLength: 2 });

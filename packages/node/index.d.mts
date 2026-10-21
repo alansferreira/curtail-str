@@ -1,2 +1,2 @@
-export { abrev } from './index.cjs';
+export { curtailStr } from './index.cjs';
 export type { Options, Replacements } from './index.cjs';
