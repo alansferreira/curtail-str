@@ -14,7 +14,7 @@ import (
 
 func main() {
     maximum := int64(2)
-    result, err := abbreviate.EncurtarChaveUniversal("cliente", abbreviate.Options{
+    result, err := abbreviate.Abbreviate("cliente", abbreviate.Options{
         Mode: abbreviate.Configurable,
         MaxWordLength: &maximum,
     })

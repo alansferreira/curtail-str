@@ -11,4 +11,4 @@ export type Options =
       readonly minWordLength?: number; readonly preserveWordLength?: number;
       readonly maxWordLength?: number };
 
-export function encurtarChaveUniversal(input: string | null | undefined, options?: Options): string;
+export function abbreviate(input: string | null | undefined, options?: Options): string;

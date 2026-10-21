@@ -49,7 +49,7 @@ def _compress(word: str, maximum: int) -> str:
     return "".join(result[:maximum])
 
 
-def encurtar_chave_universal(value: str | None, options: Options | None = None) -> str:
+def abbreviate(value: str | None, options: Options | None = None) -> str:
     """Abbreviate a key, raising TypeError/ValueError for invalid arguments."""
     supplied = {} if options is None else options
     if not isinstance(supplied, Mapping):
@@ -101,4 +101,4 @@ def encurtar_chave_universal(value: str | None, options: Options | None = None) 
     return "-".join(output)
 
 
-__all__ = ["Options", "encurtar_chave_universal"]
+__all__ = ["Options", "abbreviate"]

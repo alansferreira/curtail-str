@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const cases = require('../../../spec/cases.json');
-const { encurtarChaveUniversal: shorten } = require('..');
+const { abbreviate: shorten } = require('..');
 
 for (const item of cases) {
   test(item.name, () => {
@@ -30,8 +30,8 @@ test('invalid dynamic types', () => {
 });
 
 test('ESM and CommonJS exports', async () => {
-  const esm = await import('@abbreviate-local/core');
-  assert.equal(esm.encurtarChaveUniversal('codigo'), 'cdg');
+  const esm = await import('abbreviate');
+  assert.equal(esm.abbreviate('codigo'), 'cdg');
   assert.equal(shorten(undefined), '');
 });
 

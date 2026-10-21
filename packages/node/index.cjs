@@ -45,7 +45,7 @@ function compress(word, maximum) {
   return result.slice(0, maximum).join('');
 }
 
-function encurtarChaveUniversal(input, options = {}) {
+function abbreviate(input, options = {}) {
   record(options);
   for (const key of Reflect.ownKeys(options)) {
     if (!allowedOptions.has(key)) throw new TypeError(`Unknown option: ${String(key)}`);
@@ -104,4 +104,4 @@ function encurtarChaveUniversal(input, options = {}) {
   return output.join('-');
 }
 
-module.exports = { encurtarChaveUniversal };
+module.exports = { abbreviate };

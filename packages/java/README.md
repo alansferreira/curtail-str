@@ -5,9 +5,9 @@ Compativel com Eclipse Temurin Java 8 ou superior. Sem dependencias de runtime.
 ```java
 import local.abbreviate.Abbreviate;
 
-String universal = Abbreviate.encurtarChaveUniversal("codigo-do-cliente");
+String universal = Abbreviate.abbreviate("codigo-do-cliente");
 // cdg-clnt
-String configurable = Abbreviate.encurtarChaveUniversal("cliente",
+String configurable = Abbreviate.abbreviate("cliente",
     Abbreviate.Options.builder()
         .mode(Abbreviate.Mode.CONFIGURABLE)
         .maxWordLength(2)

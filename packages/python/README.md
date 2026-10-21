@@ -3,14 +3,14 @@
 Python 3.11 ou superior, sem dependencias de runtime.
 
 ```python
-from abbreviate import encurtar_chave_universal
+from abbreviate import abbreviate
 
-assert encurtar_chave_universal("codigo-do-cliente") == "cdg-clnt"
-assert encurtar_chave_universal("code-in-the-stock", {
+assert abbreviate("codigo-do-cliente") == "cdg-clnt"
+assert abbreviate("code-in-the-stock", {
     "mode": "custom",
     "replacements": {"the": "", "code": "cdg"},
 }) == "cdg-stck"
-assert encurtar_chave_universal("cliente", {
+assert abbreviate("cliente", {
     "mode": "configurable", "max_word_length": 2,
 }) == "cl"
 ```

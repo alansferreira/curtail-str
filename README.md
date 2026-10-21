@@ -45,10 +45,10 @@ Consulte o [contrato normativo](./spec/algorithm.md) e os
 
 | Linguagem | Minimo | API e instrucoes |
 | --- | --- | --- |
-| Node.js | 22 | [encurtarChaveUniversal](./packages/node/README.md), ESM/CommonJS e tipos TypeScript |
-| Python | 3.11 | [encurtar_chave_universal](./packages/python/README.md), pacote tipado |
-| Go | 1.26 | [EncurtarChaveUniversal](./packages/go/README.md), retorno `(string, error)` |
-| Java | 8, Eclipse Temurin | [Abbreviate.encurtarChaveUniversal](./packages/java/README.md), JAR sem dependencias de runtime |
+| Node.js | 22 | [abbreviate](./packages/node/README.md), ESM/CommonJS e tipos TypeScript |
+| Python | 3.11 | [abbreviate](./packages/python/README.md), pacote tipado |
+| Go | 1.26 | [Abbreviate](./packages/go/README.md), retorno `(string, error)` |
+| Java | 8, Eclipse Temurin | [Abbreviate.abbreviate](./packages/java/README.md), JAR sem dependencias de runtime |
 
 | Opcao | Node.js / Java | Python | Go | Padrao |
 | --- | --- | --- | --- | --- |

@@ -133,12 +133,12 @@ public final class Abbreviate {
         return value.intValue();
     }
 
-    public static String encurtarChaveUniversal(String input) {
-        return encurtarChaveUniversal(input, null);
+    public static String abbreviate(String input) {
+        return abbreviate(input, null);
     }
 
     /** Null input returns empty; invalid options throw IllegalArgumentException. */
-    public static String encurtarChaveUniversal(String input, Options supplied) {
+    public static String abbreviate(String input, Options supplied) {
         Options options = supplied == null ? Options.builder().build() : supplied;
         if (options.mode == Mode.UNIVERSAL && options.replacements != null) {
             throw new IllegalArgumentException("Replacements require custom or configurable mode");

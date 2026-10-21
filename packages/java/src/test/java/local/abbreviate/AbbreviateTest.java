@@ -48,10 +48,10 @@ public class AbbreviateTest {
                 String input = item.get("input").isJsonNull() ? null : item.get("input").getAsString();
                 Abbreviate.Options supplied = options(
                     item.has("options") ? item.getAsJsonObject("options") : new JsonObject());
-                String result = Abbreviate.encurtarChaveUniversal(input, supplied);
+                String result = Abbreviate.abbreviate(input, supplied);
                 if (error) fail(name + ": expected error");
                 assertEquals(name, item.get("expected").getAsString(), result);
-                assertEquals(name, result, Abbreviate.encurtarChaveUniversal(input, supplied));
+                assertEquals(name, result, Abbreviate.abbreviate(input, supplied));
             } catch (IllegalArgumentException ex) {
                 if (!error) throw new AssertionError(name, ex);
             }
@@ -60,10 +60,10 @@ public class AbbreviateTest {
     }
 
     @Test public void nativeContract() {
-        assertEquals("cdg", Abbreviate.encurtarChaveUniversal("codigo"));
-        assertEquals("", Abbreviate.encurtarChaveUniversal(null));
+        assertEquals("cdg", Abbreviate.abbreviate("codigo"));
+        assertEquals("", Abbreviate.abbreviate(null));
         assertThrows(IllegalArgumentException.class,
-            () -> Abbreviate.encurtarChaveUniversal("\ud800"));
+            () -> Abbreviate.abbreviate("\ud800"));
         assertThrows(IllegalArgumentException.class,
             () -> Abbreviate.Options.builder().mode(null));
         assertThrows(IllegalArgumentException.class,
@@ -73,12 +73,12 @@ public class AbbreviateTest {
         Abbreviate.Options supplied = Abbreviate.Options.builder()
             .mode(Abbreviate.Mode.CUSTOM).replacements(replacements).build();
         replacements.put("CODIGO", "CHANGED");
-        assertEquals("OK", Abbreviate.encurtarChaveUniversal("codigo", supplied));
+        assertEquals("OK", Abbreviate.abbreviate("codigo", supplied));
         assertEquals("CHANGED", replacements.get("CODIGO"));
         replacements.put("abc", "\ud800");
         Abbreviate.Options invalid = Abbreviate.Options.builder()
             .mode(Abbreviate.Mode.CUSTOM).replacements(replacements).build();
         assertThrows(IllegalArgumentException.class,
-            () -> Abbreviate.encurtarChaveUniversal("", invalid));
+            () -> Abbreviate.abbreviate("", invalid));
     }
 }

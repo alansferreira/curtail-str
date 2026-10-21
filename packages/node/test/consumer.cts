@@ -1,6 +1,6 @@
-import { encurtarChaveUniversal } from '@abbreviate-local/core';
+import { abbreviate } from 'abbreviate';
 
-const result: string = encurtarChaveUniversal(null);
+const result: string = abbreviate(null);
 void result;
 // @ts-expect-error Replacement values must be strings.
-encurtarChaveUniversal('codigo', { mode: 'custom', replacements: { codigo: 1 } });
+abbreviate('codigo', { mode: 'custom', replacements: { codigo: 1 } });

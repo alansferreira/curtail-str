@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	result, err := abbreviate.EncurtarChaveUniversal("codigo-do-cliente")
+	result, err := abbreviate.Abbreviate("codigo-do-cliente")
 	if err != nil {
 		panic(err)
 	}

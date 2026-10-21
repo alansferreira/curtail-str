@@ -3,15 +3,15 @@
 Node.js 22 ou superior. Pacote local, sem dependencias de runtime.
 
 ```js
-import { encurtarChaveUniversal } from '@abbreviate-local/core';
-// CommonJS: const { encurtarChaveUniversal } = require('@abbreviate-local/core');
+import { abbreviate } from 'abbreviate';
+// CommonJS: const { abbreviate } = require('abbreviate');
 
-encurtarChaveUniversal('codigo-do-cliente'); // 'cdg-clnt'
-encurtarChaveUniversal('code-in-the-stock', {
+abbreviate('codigo-do-cliente'); // 'cdg-clnt'
+abbreviate('code-in-the-stock', {
   mode: 'custom',
   replacements: { the: '', code: 'cdg' },
 }); // 'cdg-stck'
-encurtarChaveUniversal('cliente', {
+abbreviate('cliente', {
   mode: 'configurable',
   maxWordLength: 2,
 }); // 'cl'

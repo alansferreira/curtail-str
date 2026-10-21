@@ -1,2 +1,2 @@
-export { encurtarChaveUniversal } from './index.cjs';
+export { abbreviate } from './index.cjs';
 export type { Options, Replacements } from './index.cjs';

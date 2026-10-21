@@ -16,10 +16,10 @@ try {
     path.join(temporary, packed[0].filename),
   ], { stdio: 'pipe' });
   const requireInstalled = createRequire(path.join(temporary, 'consumer.cjs'));
-  assert.equal(requireInstalled('@abbreviate-local/core')
-    .encurtarChaveUniversal('codigo'), 'cdg');
+  assert.equal(requireInstalled('abbreviate')
+    .abbreviate('codigo'), 'cdg');
   execFileSync(process.execPath, ['--input-type=module', '-e', `
-    import { encurtarChaveUniversal as shorten } from '@abbreviate-local/core';
+    import { abbreviate as shorten } from 'abbreviate';
     if (shorten('codigo') !== 'cdg') throw new Error('ESM package import failed');
   `], { cwd: temporary, stdio: 'inherit' });
   for (const file of ['consumer.cts', 'consumer.mts']) {
