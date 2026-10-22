@@ -112,6 +112,26 @@ public key server. Unlock it with a GPG agent or provide `MAVEN_GPG_PASSPHRASE`
 through a protected environment. Signing uses Maven GPG Plugin best-practice
 mode; do not put the passphrase on the command line.
 
+If signing fails with `gpg: signing failed: No pinentry`, the batch/loopback
+signer may be unable to obtain the passphrase. An installed pinentry program
+alone does not guarantee a prompt in this mode. In a local Bash terminal, read
+the passphrase without echoing or saving it in shell history, then test signing
+without uploading:
+
+```bash
+read -r -s -p "GPG passphrase: " MAVEN_GPG_PASSPHRASE
+printf '\n'
+export MAVEN_GPG_PASSPHRASE
+mvn -B -ntp -f packages/java/pom.xml -Prelease clean verify
+unset MAVEN_GPG_PASSPHRASE
+```
+
+Do not enable shell tracing (`set -x`) while handling the passphrase. The
+environment variable remains available to child processes until unset; use a
+trusted terminal and clear it even if the command fails. For publication,
+repeat the prompt and replace the Maven command with
+`make publish-java CONFIRM=X.Y.Z`, using the current version.
+
 The Maven `release` profile attaches source and Javadoc JARs, signs artifacts,
 uploads through the Central Publishing plugin, and waits for publication.
 Coordinates are `io.github.alansferreira:curtail-str:X.Y.Z`.
