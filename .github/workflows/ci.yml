@@ -34,10 +34,6 @@ jobs:
           $actual = & .\packages\shell\curtail-str.ps1 -Text "codigo-do-cliente-ativo-no-estoque"
           if ($actual -ne "cdg-clnt-atv-estq") { throw "PowerShell 5.1 contract failed" }
       - run: python scripts/package_shell.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: curtail-str-shell-${{ matrix.os }}
-          path: packages/shell/dist/
 
   node:
     runs-on: ubuntu-latest

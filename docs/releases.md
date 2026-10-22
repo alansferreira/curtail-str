@@ -39,12 +39,12 @@ make bump VERSION=1.0.0       # explicit newer stable version
 ```
 
 Bumps update Node.js metadata and its lockfile, Python metadata, Maven metadata,
-versioned documentation links, and shell archives/checksums. Go takes its
+versioned documentation links, and print the MD5 checksum of each shell script. Go takes its
 version from Git tags rather than a version field in source code.
 Only stable `X.Y.Z` versions without leading zeros are accepted.
 
-A bump does not commit, tag, push, or publish. Review and commit all changes,
-including added and removed shell archives, before tagging. Package license
+A bump does not commit, tag, push, or publish. Review and commit all changes
+before tagging. Package license
 files must match the root [MIT license](../LICENSE).
 
 ## Tests and builds
@@ -67,12 +67,12 @@ Build outputs:
 | Python | `packages/python/dist/curtail_str-X.Y.Z-py3-none-any.whl` and `.tar.gz` |
 | Java | `packages/java/target/curtail-str-X.Y.Z.jar` |
 | Go | Package compilation; distribution uses Git tags |
-| Shell | Versioned archives and checksums in `packages/shell/dist/` |
+| Shell | MD5 checksum of each standalone script, printed to stdout; no files or directories created |
 
 Python builds run Twine metadata checks and test both installed distributions.
 Only artifacts matching `VERSION` are uploaded; old files in ignored build
-directories are not selected. Shell archives are reproducible, so rebuilding
-unchanged tracked content does not make the release tree dirty.
+directories are not selected. The shell build only calculates checksums of the
+existing script bytes without modifying them or creating archives.
 
 ## Registry credentials
 
@@ -171,11 +171,11 @@ Publishing additionally requires that the local commit already matches
 `origin/main`. The commands do not push source commits.
 
 ```sh
-make tag CONFIRM=0.1.6        # optional: creates local annotated tags only
-make publish CONFIRM=0.1.6    # tests, builds, pushes tags, uploads all runtimes
+make tag CONFIRM=0.1.7        # optional: creates local annotated tags only
+make publish CONFIRM=0.1.7    # tests, builds, pushes tags, uploads all runtimes
 ```
 
-Replace `0.1.6` with the current version. The tags are:
+Replace `0.1.7` with the current version. The tags are:
 
 - `vX.Y.Z` for the overall release.
 - `packages/go/vX.Y.Z` for the Go module in its repository subdirectory.
@@ -191,10 +191,10 @@ registry.
 To publish or retry one runtime:
 
 ```sh
-make publish-node CONFIRM=0.1.6
-make publish-python CONFIRM=0.1.6
-make publish-java CONFIRM=0.1.6
-make publish-go CONFIRM=0.1.6
+make publish-node CONFIRM=0.1.7
+make publish-python CONFIRM=0.1.7
+make publish-java CONFIRM=0.1.7
+make publish-go CONFIRM=0.1.7
 ```
 
 Each target runs the relevant tests and build before publication. Existing tags

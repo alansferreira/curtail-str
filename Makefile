@@ -76,7 +76,6 @@ bump: check-version
 		replace_in_file "$$doc" "s/$$old_re/$$new/g"; \
 	done; \
 	$(PYTHON) scripts/package_shell.py; \
-	rm -f "packages/shell/dist/curtail-str-shell-$$old.tar.gz" "packages/shell/dist/curtail-str-shell-$$old.zip"; \
 	$(MAKE) --no-print-directory check-version; \
 	echo "Version updated: $$old -> $$new. Review and commit before tagging."
 

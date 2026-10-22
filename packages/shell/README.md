@@ -65,29 +65,24 @@ command-line limit. Do not interpolate untrusted input into shell commands.
 
 ## Download
 
-Archives and checksums are available directly from the repository:
-
-- [curtail-str-shell-0.1.6.tar.gz](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.tar.gz)
-- [curtail-str-shell-0.1.6.zip](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.zip)
-- [SHA256SUMS](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/SHA256SUMS)
+Download the standalone scripts directly from the repository. No archives or
+distribution directories are generated.
 
 Replace `main` with a commit SHA or tag for an immutable revision.
 Inspect downloaded scripts and compare checksums with a trusted source before
-executing them. Checksums downloaded from the same host detect corruption,
-but do not authenticate a compromised host. Avoid `curl | sh` and
+executing them. MD5 checksums can detect accidental corruption, but are not
+suitable for security or authenticity verification. Avoid `curl | sh` and
 `Invoke-Expression` on downloaded content.
 
 ### Unix
 
 ```sh
-base='https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist'
-curl -fL "$base/curtail-str-shell-0.1.6.tar.gz" -o curtail-str-shell-0.1.6.tar.gz
-curl -fL "$base/SHA256SUMS" -o SHA256SUMS
-sha256sum curtail-str-shell-0.1.6.tar.gz
-# macOS: shasum -a 256 curtail-str-shell-0.1.6.tar.gz
-# Compare the hash with a trusted value before extracting:
-tar -xzf curtail-str-shell-0.1.6.tar.gz
-sh curtail-str-shell-0.1.6/curtail-str.sh "active-customer-code-in-the-stock"
+base='https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell'
+curl -fL "$base/curtail-str.sh" -o curtail-str.sh
+md5sum curtail-str.sh
+# macOS: md5 curtail-str.sh
+# Inspect the script and compare the hash with a trusted value before running:
+sh curtail-str.sh "active-customer-code-in-the-stock"
 ```
 
 With wget, replace `curl -fL URL -o FILE` with `wget -O FILE URL`.
@@ -98,13 +93,11 @@ that directory is on your PATH. No sudo is needed.
 ### Windows PowerShell
 
 ```powershell
-$base = 'https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist'
-Invoke-WebRequest -UseBasicParsing "$base/curtail-str-shell-0.1.6.zip" -OutFile curtail-str-shell-0.1.6.zip
-Invoke-WebRequest -UseBasicParsing "$base/SHA256SUMS" -OutFile SHA256SUMS
-Get-FileHash curtail-str-shell-0.1.6.zip -Algorithm SHA256
-# Compare the hash with a trusted value before extracting:
-Expand-Archive curtail-str-shell-0.1.6.zip -DestinationPath .
-.\curtail-str-shell-0.1.6\curtail-str.bat "active-customer-code-in-the-stock"
+$base = 'https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell'
+Invoke-WebRequest -UseBasicParsing "$base/curtail-str.ps1" -OutFile curtail-str.ps1
+Get-FileHash curtail-str.ps1 -Algorithm MD5
+# Inspect the script and compare the hash with a trusted value before running:
+.\curtail-str.ps1 -Text "active-customer-code-in-the-stock"
 ```
 
 Follow your organization's execution policy for `.ps1` scripts. The batch
@@ -112,19 +105,18 @@ script does not require changing PowerShell execution policy.
 
 ### Windows CMD
 
-On systems with `curl.exe` and `tar.exe`:
+On systems with `curl.exe`:
 
 ```bat
-curl.exe -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.zip -o curtail-str-shell-0.1.6.zip
-certutil -hashfile curtail-str-shell-0.1.6.zip SHA256
-REM Compare the hash with a trusted value before extracting:
-tar.exe -xf curtail-str-shell-0.1.6.zip
-curtail-str-shell-0.1.6\curtail-str.bat "active-customer-code-in-the-stock"
+curl.exe -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.bat -o curtail-str.bat
+certutil -hashfile curtail-str.bat MD5
+REM Inspect the script and compare the hash with a trusted value before running:
+curtail-str.bat "active-customer-code-in-the-stock"
 ```
 
 ### Download individual scripts
 
-Each script can run independently of the archive:
+Each script can run independently:
 
 ```sh
 curl -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/curtail-str.sh -o curtail-str.sh
@@ -152,10 +144,10 @@ python3 scripts/package_shell.py
 python3 -m unittest discover -s packages/shell/tests -v
 ```
 
-Packaging uses only the Python standard library on the build machine.
-Consumers do not need Python. The ZIP contains CRLF line endings for Windows
-scripts. Regenerate both archives and `SHA256SUMS` whenever the scripts or this
-guide change, and version them together.
+The checksum command uses only the Python standard library and prints one
+`<md5>  <filename>` line for each of `curtail-str.sh`, `curtail-str.bat`, and
+`curtail-str.ps1`. It hashes the existing bytes without normalizing line endings
+and creates no files or directories. Consumers do not need Python.
 
 Tests cover shared ASCII behavior and platform-specific cases. CMD tests
 require native Windows; PowerShell tests require an installed PowerShell.

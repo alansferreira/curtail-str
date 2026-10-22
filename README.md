@@ -83,7 +83,7 @@ python -m pip install /path/to/curtail-str/packages/python
 go mod edit -replace github.com/alansferreira/curtail-str/packages/go=/path/to/curtail-str/packages/go
 go get github.com/alansferreira/curtail-str/packages/go
 
-# Java: install io.github.alansferreira:curtail-str:0.1.6 in the local Maven repository
+# Java: install io.github.alansferreira:curtail-str:0.1.7 in the local Maven repository
 mvn -B -ntp -f /path/to/curtail-str/packages/java/pom.xml install
 ```
 
@@ -103,10 +103,9 @@ sh curtail-str.sh "active-customer-code-in-the-stock"
 # actv-cstm-cd-the-stck
 ```
 
-Download the complete package:
-[TAR.GZ](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.tar.gz),
-[ZIP](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.zip),
-and [SHA-256 checksums](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/SHA256SUMS).
+Download each script directly; no archives or distribution directories are generated.
+Run `python3 scripts/package_shell.py` from the checkout to print the MD5 checksum
+of each script without creating files. MD5 is not an authenticity guarantee.
 Replace `main` with a commit SHA or tag to pin an immutable revision.
 The package guide includes curl, wget, and Invoke-WebRequest examples.
 

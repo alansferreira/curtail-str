@@ -1,7 +1,3 @@
 __pycache__/
 *.py[cod]
-!/dist/
-/dist/*
-!/dist/curtail-str-shell-*.tar.gz
-!/dist/curtail-str-shell-*.zip
-!/dist/SHA256SUMS
+/dist/
