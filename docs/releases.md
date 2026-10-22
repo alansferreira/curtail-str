@@ -219,8 +219,10 @@ Publication workflows are separated by destination:
 | Maven Central | [Publish Maven Central](../.github/workflows/cd-maven-central.yaml) |
 | Go module tags | [Publish Go](../.github/workflows/cd-go.yaml) |
 
-Open **Actions > Publish destination > Run workflow**, select `main`, and enter
-the exact version from `VERSION`. Run each destination separately to publish
+Open **Actions > Publish destination > Run workflow** and select `main`.
+The workflow reads the release version automatically from the committed
+`VERSION` file and validates matching package metadata; no version input is
+required. Run each destination separately to publish
 all packages or retry only a failed registry. Each entry point calls the
 shared [runtime workflow](../.github/workflows/cd-runtime.yaml), which cannot
 be dispatched directly.

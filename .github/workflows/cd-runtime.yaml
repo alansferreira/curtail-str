@@ -3,10 +3,6 @@ name: Publish runtime (reusable)
 on:
   workflow_call:
     inputs:
-      version:
-        description: Exact version in VERSION (no v prefix)
-        required: true
-        type: string
       runtime:
         description: Runtime selected by the destination workflow
         required: true
@@ -27,7 +23,6 @@ jobs:
     permissions:
       contents: write
     env:
-      RELEASE_VERSION: ${{ inputs.version }}
       RELEASE_RUNTIME: ${{ inputs.runtime }}
     steps:
       - name: Require main branch and supported runtime
@@ -52,7 +47,9 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          RELEASE_VERSION=$(python3 scripts/release.py version)
           make release-check CONFIRM="$RELEASE_VERSION"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

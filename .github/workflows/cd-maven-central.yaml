@@ -2,11 +2,6 @@ name: Publish Maven Central
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: Exact version in VERSION (no v prefix)
-        required: true
-        type: string
 
 permissions:
   contents: write
@@ -15,5 +10,4 @@ jobs:
   publish:
     uses: ./.github/workflows/cd-runtime.yaml
     with:
-      version: ${{ inputs.version }}
       runtime: java
