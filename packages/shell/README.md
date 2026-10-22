@@ -67,8 +67,8 @@ command-line limit. Do not interpolate untrusted input into shell commands.
 
 Archives and checksums are available directly from the repository:
 
-- [curtail-str-shell-0.1.5.tar.gz](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.5.tar.gz)
-- [curtail-str-shell-0.1.5.zip](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.5.zip)
+- [curtail-str-shell-0.1.6.tar.gz](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.tar.gz)
+- [curtail-str-shell-0.1.6.zip](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.zip)
 - [SHA256SUMS](https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/SHA256SUMS)
 
 Replace `main` with a commit SHA or tag for an immutable revision.
@@ -81,13 +81,13 @@ but do not authenticate a compromised host. Avoid `curl | sh` and
 
 ```sh
 base='https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist'
-curl -fL "$base/curtail-str-shell-0.1.5.tar.gz" -o curtail-str-shell-0.1.5.tar.gz
+curl -fL "$base/curtail-str-shell-0.1.6.tar.gz" -o curtail-str-shell-0.1.6.tar.gz
 curl -fL "$base/SHA256SUMS" -o SHA256SUMS
-sha256sum curtail-str-shell-0.1.5.tar.gz
-# macOS: shasum -a 256 curtail-str-shell-0.1.5.tar.gz
+sha256sum curtail-str-shell-0.1.6.tar.gz
+# macOS: shasum -a 256 curtail-str-shell-0.1.6.tar.gz
 # Compare the hash with a trusted value before extracting:
-tar -xzf curtail-str-shell-0.1.5.tar.gz
-sh curtail-str-shell-0.1.5/curtail-str.sh "active-customer-code-in-the-stock"
+tar -xzf curtail-str-shell-0.1.6.tar.gz
+sh curtail-str-shell-0.1.6/curtail-str.sh "active-customer-code-in-the-stock"
 ```
 
 With wget, replace `curl -fL URL -o FILE` with `wget -O FILE URL`.
@@ -99,12 +99,12 @@ that directory is on your PATH. No sudo is needed.
 
 ```powershell
 $base = 'https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist'
-Invoke-WebRequest -UseBasicParsing "$base/curtail-str-shell-0.1.5.zip" -OutFile curtail-str-shell-0.1.5.zip
+Invoke-WebRequest -UseBasicParsing "$base/curtail-str-shell-0.1.6.zip" -OutFile curtail-str-shell-0.1.6.zip
 Invoke-WebRequest -UseBasicParsing "$base/SHA256SUMS" -OutFile SHA256SUMS
-Get-FileHash curtail-str-shell-0.1.5.zip -Algorithm SHA256
+Get-FileHash curtail-str-shell-0.1.6.zip -Algorithm SHA256
 # Compare the hash with a trusted value before extracting:
-Expand-Archive curtail-str-shell-0.1.5.zip -DestinationPath .
-.\curtail-str-shell-0.1.5\curtail-str.bat "active-customer-code-in-the-stock"
+Expand-Archive curtail-str-shell-0.1.6.zip -DestinationPath .
+.\curtail-str-shell-0.1.6\curtail-str.bat "active-customer-code-in-the-stock"
 ```
 
 Follow your organization's execution policy for `.ps1` scripts. The batch
@@ -115,11 +115,11 @@ script does not require changing PowerShell execution policy.
 On systems with `curl.exe` and `tar.exe`:
 
 ```bat
-curl.exe -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.5.zip -o curtail-str-shell-0.1.5.zip
-certutil -hashfile curtail-str-shell-0.1.5.zip SHA256
+curl.exe -fL https://raw.githubusercontent.com/alansferreira/curtail-str/main/packages/shell/dist/curtail-str-shell-0.1.6.zip -o curtail-str-shell-0.1.6.zip
+certutil -hashfile curtail-str-shell-0.1.6.zip SHA256
 REM Compare the hash with a trusted value before extracting:
-tar.exe -xf curtail-str-shell-0.1.5.zip
-curtail-str-shell-0.1.5\curtail-str.bat "active-customer-code-in-the-stock"
+tar.exe -xf curtail-str-shell-0.1.6.zip
+curtail-str-shell-0.1.6\curtail-str.bat "active-customer-code-in-the-stock"
 ```
 
 ### Download individual scripts

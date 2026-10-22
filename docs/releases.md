@@ -171,11 +171,11 @@ Publishing additionally requires that the local commit already matches
 `origin/main`. The commands do not push source commits.
 
 ```sh
-make tag CONFIRM=0.1.5        # optional: creates local annotated tags only
-make publish CONFIRM=0.1.5    # tests, builds, pushes tags, uploads all runtimes
+make tag CONFIRM=0.1.6        # optional: creates local annotated tags only
+make publish CONFIRM=0.1.6    # tests, builds, pushes tags, uploads all runtimes
 ```
 
-Replace `0.1.5` with the current version. The tags are:
+Replace `0.1.6` with the current version. The tags are:
 
 - `vX.Y.Z` for the overall release.
 - `packages/go/vX.Y.Z` for the Go module in its repository subdirectory.
@@ -191,10 +191,10 @@ registry.
 To publish or retry one runtime:
 
 ```sh
-make publish-node CONFIRM=0.1.5
-make publish-python CONFIRM=0.1.5
-make publish-java CONFIRM=0.1.5
-make publish-go CONFIRM=0.1.5
+make publish-node CONFIRM=0.1.6
+make publish-python CONFIRM=0.1.6
+make publish-java CONFIRM=0.1.6
+make publish-go CONFIRM=0.1.6
 ```
 
 Each target runs the relevant tests and build before publication. Existing tags
