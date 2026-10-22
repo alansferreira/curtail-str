@@ -51,4 +51,4 @@ jobs:
           : "${NODE_AUTH_TOKEN:?Set the NPM_TOKEN secret}"
           npm whoami --registry=https://registry.npmjs.org/
           make push-tags CONFIRM="$RELEASE_VERSION"
-          npm publish "packages/node/dist/curtail-str-$RELEASE_VERSION.tgz" --access=public --registry=https://registry.npmjs.org/
+          npm stage publish "packages/node/dist/curtail-str-$RELEASE_VERSION.tgz" --access=public --registry=https://registry.npmjs.org/
