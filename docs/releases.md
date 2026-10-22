@@ -208,4 +208,53 @@ tags or successful uploads to other registries. Inspect registry state and retry
 only the failed runtime. Existing versions are not overwritten or silently
 skipped. If published contents need changing, bump to a new version.
 
-The CI verification workflow never publishes packages automatically.
+## GitHub Actions CD
+
+The [Publish packages workflow](../.github/workflows/cd.yml) is manually
+dispatched from **Actions > Publish packages > Run workflow**. Select `main`,
+enter the exact version from `VERSION`, and choose `all` or one runtime.
+Single-runtime runs allow retrying a failed registry without re-uploading
+packages that already succeeded.
+
+Before the first run, create a GitHub environment named `release`. Restrict
+deployment branches to `main` and configure required reviewers if supported
+by your GitHub plan. Add the following environment secrets:
+
+| Secret | Required for | Value |
+| --- | --- | --- |
+| `NPM_TOKEN` | Node.js | npm publish token with the required automation/2FA permissions |
+| `PYPI_TOKEN` | Python | PyPI API token, including the `pypi-` prefix |
+| `CENTRAL_USERNAME` | Java | Central Portal publisher-token username |
+| `CENTRAL_PASSWORD` | Java | Central Portal publisher-token password |
+| `GPG_PRIVATE_KEY` | Java | ASCII-armored private signing key |
+| `MAVEN_GPG_PASSPHRASE` | Java | Passphrase protecting that private key |
+
+Export the private key only to a protected local file when configuring the
+secret; do not print it in logs, attach it to chat, or commit it:
+
+```sh
+gpg --armor --export-secret-keys YOUR_FINGERPRINT > /secure/path/signing-key.asc
+```
+
+Transfer the file content to the `GPG_PRIVATE_KEY` environment secret, then
+remove the local export securely. The public key must already be published
+to a public key server. The runner imports the private key into a temporary,
+isolated GPG home, uses the passphrase through the environment without an
+interactive prompt, and stops its GPG agent at step exit. GitHub-hosted runners
+are ephemeral; do not change this workflow to a persistent self-hosted runner
+without adding key cleanup.
+
+Every run checks the dispatched commit and version, tests and builds all
+packages, then publishes only the selected runtimes. Registry secrets are
+provided only to the publishing step. The job uses `GITHUB_TOKEN` with
+`contents: write` for annotated release tags; no personal access token is
+needed. Repository tag rules must permit those pushes.
+
+Publication runs are serialized and an active run is never automatically
+cancelled by a later dispatch. Avoid publishing locally at the same time.
+The workflow neither bumps versions nor commits or pushes source changes.
+Commit and push the release version to `main` before dispatching. If `main`
+changes while a run waits for approval, start a new run for the current commit.
+There is no publication trigger on pushes, tags, or pull requests.
+
+The separate CI verification workflow never publishes packages.
