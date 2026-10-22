@@ -1,0 +1,12 @@
+{
+  "name": "abbreviate-node-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node main.mjs"
+  },
+  "dependencies": {
+    "curtail-str": "^0.1.1"
+  }
+}
