@@ -210,11 +210,20 @@ skipped. If published contents need changing, bump to a new version.
 
 ## GitHub Actions CD
 
-The [Publish packages workflow](../.github/workflows/cd.yml) is manually
-dispatched from **Actions > Publish packages > Run workflow**. Select `main`,
-enter the exact version from `VERSION`, and choose `all` or one runtime.
-Single-runtime runs allow retrying a failed registry without re-uploading
-packages that already succeeded.
+Publication workflows are separated by destination:
+
+| Destination | Workflow |
+| --- | --- |
+| npm | [Publish npm](../.github/workflows/cd-npm.yaml) |
+| PyPI | [Publish PyPI](../.github/workflows/cd-pypi.yaml) |
+| Maven Central | [Publish Maven Central](../.github/workflows/cd-maven-central.yaml) |
+| Go module tags | [Publish Go](../.github/workflows/cd-go.yaml) |
+
+Open **Actions > Publish destination > Run workflow**, select `main`, and enter
+the exact version from `VERSION`. Run each destination separately to publish
+all packages or retry only a failed registry. Each entry point calls the
+shared [runtime workflow](../.github/workflows/cd-runtime.yaml), which cannot
+be dispatched directly.
 
 Before the first run, create a GitHub environment named `release`. Restrict
 deployment branches to `main` and configure required reviewers if supported
@@ -245,14 +254,14 @@ are ephemeral; do not change this workflow to a persistent self-hosted runner
 without adding key cleanup.
 
 Every run checks the dispatched commit and version, tests and builds all
-packages, then publishes only the selected runtimes. Registry secrets are
+packages, then publishes only its destination. Registry secrets are
 provided only to the publishing step. The job uses `GITHUB_TOKEN` with
 `contents: write` for annotated release tags; no personal access token is
 needed. Repository tag rules must permit those pushes.
 
 Publication runs are serialized and an active run is never automatically
 cancelled by a later dispatch. Avoid publishing locally at the same time.
-The workflow neither bumps versions nor commits or pushes source changes.
+The workflows neither bump versions nor commit or push source changes.
 Commit and push the release version to `main` before dispatching. If `main`
 changes while a run waits for approval, start a new run for the current commit.
 There is no publication trigger on pushes, tags, or pull requests.

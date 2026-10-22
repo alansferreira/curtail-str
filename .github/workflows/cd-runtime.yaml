@@ -1,23 +1,16 @@
-name: Publish packages
+name: Publish runtime (reusable)
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       version:
         description: Exact version in VERSION (no v prefix)
         required: true
         type: string
       runtime:
-        description: Publish all packages or retry one runtime
+        description: Runtime selected by the destination workflow
         required: true
-        default: all
-        type: choice
-        options:
-          - all
-          - node
-          - python
-          - java
-          - go
+        type: string
 
 permissions:
   contents: read
@@ -37,8 +30,12 @@ jobs:
       RELEASE_VERSION: ${{ inputs.version }}
       RELEASE_RUNTIME: ${{ inputs.runtime }}
     steps:
-      - name: Require main branch
+      - name: Require main branch and supported runtime
         run: |
+          case "$RELEASE_RUNTIME" in
+            node|python|java|go) ;;
+            *) echo "::error::Unsupported release runtime."; exit 1 ;;
+          esac
           if [[ "$GITHUB_REF" != refs/heads/main ]]; then
             echo "::error::Run this workflow from main."
             exit 1
