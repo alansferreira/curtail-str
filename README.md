@@ -4,6 +4,10 @@ Small, pure libraries for shortening identifiers in Node.js, Python, Go, and
 Java. Each library implements the same dictionary-free algorithm with three
 explicit modes.
 
+Try the [online playground](https://alansferreira.github.io/curtail-str/) to
+explore all three modes directly in your browser. See the
+[playground guide](./playground/README.md) for local development and Pages deployment.
+
 ```text
 active-customer-code-in-the-stock -> actv-cstm-cd-the-stck
 codigo-do-cliente-ativo-no-estoque -> cdg-clnt-atv-estq

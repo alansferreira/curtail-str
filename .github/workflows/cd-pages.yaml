@@ -1,0 +1,61 @@
+name: Deploy playground to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - playground/**
+      - packages/node/index.cjs
+      - scripts/build_playground.mjs
+      - scripts/tests/playground.test.mjs
+      - spec/cases.json
+      - LICENSE
+      - .github/workflows/cd-pages.yaml
+  pull_request:
+    paths:
+      - playground/**
+      - packages/node/index.cjs
+      - scripts/build_playground.mjs
+      - scripts/tests/playground.test.mjs
+      - spec/cases.json
+      - LICENSE
+      - .github/workflows/cd-pages.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build playground
+        run: node scripts/build_playground.mjs
+      - name: Test browser implementation
+        run: node --test scripts/tests/playground.test.mjs
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: playground/dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v4
+        id: deployment

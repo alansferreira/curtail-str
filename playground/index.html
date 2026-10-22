@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Try curtail-str: dictionary-free identifier shortening, directly in your browser.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>curtail-str | Playground</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="./">curtail-str<span> / playground</span></a>
+    <a href="https://github.com/alansferreira/curtail-str">View on GitHub &nearr;</a>
+  </header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow">SMALL WORDS. CLEARER KEYS.</p>
+      <h1>Shorter identifiers.<br>Same shared rules.</h1>
+      <p>Explore dictionary-free compression with the real JavaScript implementation.
+        Your input stays in your browser. No API, no tracking.</p>
+    </section>
+    <div class="workspace">
+      <section class="panel" aria-labelledby="input-title">
+        <h2 id="input-title">01 / Configure</h2>
+        <form id="playground" novalidate>
+          <label for="input">Identifier</label>
+          <textarea id="input" rows="4" spellcheck="false">codigo-do-cliente-ativo-no-estoque</textarea>
+          <div class="examples" aria-label="Load an example">
+            <button type="button" data-example="codigo-do-cliente-ativo-no-estoque">Portuguese</button>
+            <button type="button" data-example="active-customer-code-in-the-stock">English</button>
+            <button type="button" data-example="API_customer_SKU_inventory">Technical terms</button>
+          </div>
+          <label for="mode">Mode</label>
+          <select id="mode">
+            <option value="universal">Universal</option>
+            <option value="custom">Custom replacements</option>
+            <option value="configurable">Configurable limits</option>
+          </select>
+          <p id="mode-help" class="hint">Remove short words, preserve three-character terms, compress longer words.</p>
+          <fieldset id="replacement-fields" hidden disabled>
+            <legend>Replacement map</legend>
+            <label for="replacements">JSON object</label>
+            <textarea id="replacements" rows="4" spellcheck="false">{"the": "", "code": "cdg"}</textarea>
+            <p class="hint">Values are literal results. Use an empty string to remove a word.</p>
+          </fieldset>
+          <fieldset id="limit-fields" hidden disabled>
+            <legend>Length limits</legend>
+            <div class="limits">
+              <div><label for="minimum">Minimum</label><input id="minimum" type="number" min="1" max="2147483647" step="1" value="3"></div>
+              <div><label for="preserve">Preserve up to</label><input id="preserve" type="number" min="1" max="2147483647" step="1" value="3"></div>
+              <div><label for="maximum">Compressed max</label><input id="maximum" type="number" min="1" max="2147483647" step="1" value="4"></div>
+            </div>
+            <p class="hint">Independent limits, measured in Unicode code points.</p>
+          </fieldset>
+        </form>
+      </section>
+      <section class="panel result-panel" aria-labelledby="result-title">
+        <h2 id="result-title">02 / Result</h2>
+        <div aria-live="polite" aria-atomic="true">
+          <pre id="result">Loading implementation...</pre>
+          <p id="stats" class="hint"></p>
+          <p id="error" role="alert" hidden></p>
+        </div>
+        <h3>JavaScript</h3>
+        <pre id="snippet"></pre>
+        <p class="hint">The same algorithm is available for Node.js, Python, Go, and Java.</p>
+        <noscript><p>Enable JavaScript to use the playground.</p></noscript>
+      </section>
+    </div>
+    <section class="notes" aria-label="Algorithm overview">
+      <div><h3>Normalize</h3><p>Lowercase and split on hyphens, underscores, and Unicode whitespace.</p></div>
+      <div><h3>Compress</h3><p>Keep the first letter, remove remaining vowels, collapse repeated letters.</p></div>
+      <div><h3>Keep it readable</h3><p>Default output is limited to four code points per compressed word. No uniqueness guarantee.</p></div>
+    </section>
+  </main>
+  <footer>MIT licensed &middot; <a href="./LICENSE">License</a> &middot;
+    <a href="https://github.com/alansferreira/curtail-str/blob/main/spec/algorithm.md">Algorithm contract</a></footer>
+</body>
+</html>
