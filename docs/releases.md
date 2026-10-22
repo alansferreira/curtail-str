@@ -222,10 +222,10 @@ Publication workflows are separated by destination:
 Open **Actions > Publish destination > Run workflow** and select `main`.
 The workflow reads the release version automatically from the committed
 `VERSION` file and validates matching package metadata; no version input is
-required. Run each destination separately to publish
-all packages or retry only a failed registry. Each entry point calls the
-shared [runtime workflow](../.github/workflows/cd-runtime.yaml), which cannot
-be dispatched directly.
+required. Run each destination separately to publish all packages or retry
+only a failed registry. Each workflow is independent and installs only the
+tools for its destination, plus Python for shared release validation.
+There is no generic or reusable CD workflow.
 
 Before the first run, create a GitHub environment named `release`. Restrict
 deployment branches to `main` and configure required reviewers if supported
@@ -255,8 +255,10 @@ interactive prompt, and stops its GPG agent at step exit. GitHub-hosted runners
 are ephemeral; do not change this workflow to a persistent self-hosted runner
 without adding key cleanup.
 
-Every run checks the dispatched commit and version, tests and builds all
-packages, then publishes only its destination. Registry secrets are
+Every run checks the dispatched commit and version, tests release tooling
+and its own runtime package, builds that package, then publishes only its
+destination. The separate CI workflow covers the complete runtime matrix.
+Registry secrets are
 provided only to the publishing step. The job uses `GITHUB_TOKEN` with
 `contents: write` for annotated release tags; no personal access token is
 needed. Repository tag rules must permit those pushes.

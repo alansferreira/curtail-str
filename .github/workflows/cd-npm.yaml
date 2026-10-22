@@ -6,8 +6,50 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: publish-packages
+  cancel-in-progress: false
+
 jobs:
   publish:
-    uses: ./.github/workflows/cd-runtime.yaml
-    with:
-      runtime: node
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: release
+    steps:
+      - name: Require main branch
+        run: test "$GITHUB_REF" = refs/heads/main
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: https://registry.npmjs.org/
+      - name: Validate release
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "::error::main changed after dispatch. Start a new workflow run."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          RELEASE_VERSION=$(python scripts/release.py version)
+          make release-check CONFIRM="$RELEASE_VERSION"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
+      - name: Install Node.js dependencies
+        run: npm ci
+        working-directory: packages/node
+      - name: Test Node.js package and release tooling
+        run: make test-node test-release
+      - name: Build npm tarball
+        run: make build-node
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          : "${NODE_AUTH_TOKEN:?Set the NPM_TOKEN secret}"
+          python scripts/release.py publish node --confirm "$RELEASE_VERSION"
