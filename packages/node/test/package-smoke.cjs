@@ -11,9 +11,10 @@ try {
   const packed = JSON.parse(execFileSync('npm', [
     'pack', '--json', '--pack-destination', temporary,
   ], { cwd: source, encoding: 'utf8' }));
+  const packedEntry = Array.isArray(packed) ? packed[0] : Object.values(packed)[0];
   execFileSync('npm', [
     'install', '--prefix', temporary, '--ignore-scripts', '--no-audit', '--no-fund',
-    path.join(temporary, packed[0].filename),
+    path.join(temporary, packedEntry.filename),
   ], { stdio: 'pipe' });
   const requireInstalled = createRequire(path.join(temporary, 'consumer.cjs'));
   assert.equal(requireInstalled('curtail-str')
