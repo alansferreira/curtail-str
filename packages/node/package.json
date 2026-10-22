@@ -10,20 +10,50 @@
     "url": "git+https://github.com/alansferreira/curtail-str.git",
     "directory": "packages/node"
   },
-  "publishConfig": {"access": "public", "registry": "https://registry.npmjs.org/"},
-  "engines": {"node": ">=22"},
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "main": "./index.cjs",
+  "unpkg": "./dist/curtail-str.min.js",
+  "jsdelivr": "./dist/curtail-str.min.js",
   "types": "./index.d.cts",
   "exports": {
     ".": {
-      "import": {"types": "./index.d.mts", "default": "./index.mjs"},
-      "require": {"types": "./index.d.cts", "default": "./index.cjs"}
-    }
+      "import": {
+        "types": "./index.d.mts",
+        "default": "./index.mjs"
+      },
+      "require": {
+        "types": "./index.d.cts",
+        "default": "./index.cjs"
+      }
+    },
+    "./curtail-str.min.js": "./dist/curtail-str.min.js",
+    "./curtail-str.min.mjs": "./dist/curtail-str.min.mjs",
+    "./dist/curtail-str.min.js": "./dist/curtail-str.min.js",
+    "./dist/curtail-str.min.mjs": "./dist/curtail-str.min.mjs"
   },
-  "files": ["index.cjs", "index.mjs", "index.d.cts", "index.d.mts", "LICENSE"],
+  "files": [
+    "index.cjs",
+    "index.mjs",
+    "index.d.cts",
+    "index.d.mts",
+    "dist/curtail-str.min.js",
+    "dist/curtail-str.min.mjs",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "node --test test/*.test.cjs",
+    "build": "node build.cjs",
+    "prepack": "node build.cjs",
+    "test": "node build.cjs && node --test test/*.test.cjs",
     "typecheck": "tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 test/consumer.mts test/consumer.cts"
   },
-  "devDependencies": {"typescript": "^5.9.3"}
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3"
+  }
 }

@@ -25,12 +25,14 @@
       <section class="panel" aria-labelledby="input-title">
         <h2 id="input-title">01 / Configure</h2>
         <form id="playground" novalidate>
-          <label for="input">Identifier</label>
-          <textarea id="input" rows="4" spellcheck="false">codigo-do-cliente-ativo-no-estoque</textarea>
+          <label for="input">Identifiers (one per line)</label>
+          <textarea id="input" rows="4" spellcheck="false">codigo-do-cliente-ativo-no-estoque
+active-customer-code-in-the-stock
+API_customer_SKU_inventory</textarea>
           <div class="examples" aria-label="Load an example">
-            <button type="button" data-example="codigo-do-cliente-ativo-no-estoque">Portuguese</button>
-            <button type="button" data-example="active-customer-code-in-the-stock">English</button>
-            <button type="button" data-example="API_customer_SKU_inventory">Technical terms</button>
+            <button type="button" data-example="codigo-do-cliente-ativo-no-estoque&#10;numero-do-pedido-faturado">Portuguese</button>
+            <button type="button" data-example="active-customer-code-in-the-stock&#10;total-billed-order-amount">English</button>
+            <button type="button" data-example="API_customer_SKU_inventory&#10;HTTP_response_status_code">Technical terms</button>
           </div>
           <label for="mode">Mode</label>
           <select id="mode">

@@ -18,9 +18,13 @@ try {
   const requireInstalled = createRequire(path.join(temporary, 'consumer.cjs'));
   assert.equal(requireInstalled('curtail-str')
     .curtailStr('codigo'), 'cdg');
+  assert.equal(requireInstalled('curtail-str/curtail-str.min.js')
+    .curtailStr('codigo'), 'cdg');
   execFileSync(process.execPath, ['--input-type=module', '-e', `
     import { curtailStr as shorten } from 'curtail-str';
+    import { curtailStr as shortenMin } from 'curtail-str/curtail-str.min.mjs';
     if (shorten('codigo') !== 'cdg') throw new Error('ESM package import failed');
+    if (shortenMin('codigo') !== 'cdg') throw new Error('Minified ESM package import failed');
   `], { cwd: temporary, stdio: 'inherit' });
   for (const file of ['consumer.cts', 'consumer.mts']) {
     fs.copyFileSync(path.join(__dirname, file), path.join(temporary, file));

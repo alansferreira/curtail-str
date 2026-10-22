@@ -57,8 +57,7 @@ make build
 
 Select individual runtimes with `test-node`, `test-python`, `test-go`,
 `test-java`, `build-node`, `build-python`, `build-go`, or `build-java`.
-`test-shell`, `build-shell`, and `test-release` cover shell distribution and
-release tooling.
+`test-shell` and `build-shell` cover the standalone shell distribution.
 
 Build outputs:
 
@@ -224,7 +223,7 @@ The workflow reads the release version automatically from the committed
 `VERSION` file and validates matching package metadata; no version input is
 required. Run each destination separately to publish all packages or retry
 only a failed registry. Each workflow is independent and installs only the
-tools for its destination, plus Python for shared release validation.
+tools for its destination.
 There is no generic or reusable CD workflow.
 
 Before the first run, create a GitHub environment named `release`. Restrict
@@ -255,9 +254,9 @@ interactive prompt, and stops its GPG agent at step exit. GitHub-hosted runners
 are ephemeral; do not change this workflow to a persistent self-hosted runner
 without adding key cleanup.
 
-Every run checks the dispatched commit and version, tests release tooling
-and its own runtime package, builds that package, then publishes only its
-destination. The separate CI workflow covers the complete runtime matrix.
+Every run checks the dispatched commit and version, tests its own runtime
+package, builds that package, then publishes only its destination. The
+separate CI workflow covers the complete runtime matrix.
 Registry secrets are
 provided only to the publishing step. The job uses `GITHUB_TOKEN` with
 `contents: write` for annotated release tags; no personal access token is

@@ -33,15 +33,15 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          RELEASE_VERSION=$(python scripts/release.py version)
+          RELEASE_VERSION=$(make version)
           make release-check CONFIRM="$RELEASE_VERSION"
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
       - name: Install Python packaging tools
         run: |
           python -m venv .venv-release
           .venv-release/bin/python -m pip install -r requirements-release.txt
-      - name: Test Python package and release tooling
-        run: make test-python test-release
+      - name: Test Python package
+        run: make test-python
       - name: Build and validate Python distributions
         run: make build-python
       - name: Publish to PyPI
@@ -50,4 +50,11 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           : "${TWINE_PASSWORD:?Set the PYPI_TOKEN secret}"
-          .venv-release/bin/python scripts/release.py publish python --confirm "$RELEASE_VERSION"
+          .venv-release/bin/python -m twine check --strict \
+            "packages/python/dist/curtail_str-$RELEASE_VERSION-py3-none-any.whl" \
+            "packages/python/dist/curtail_str-$RELEASE_VERSION.tar.gz"
+          make push-tags CONFIRM="$RELEASE_VERSION"
+          .venv-release/bin/python -m twine upload --non-interactive \
+            --repository-url https://upload.pypi.org/legacy/ \
+            "packages/python/dist/curtail_str-$RELEASE_VERSION-py3-none-any.whl" \
+            "packages/python/dist/curtail_str-$RELEASE_VERSION.tar.gz"

@@ -1,7 +1,7 @@
 # curtail-str for Node.js
 
 Requires Node.js 22 or later. No runtime dependencies. Supports ESM, CommonJS,
-and TypeScript declarations.
+minified UMD/ESM browser bundles for CDNs, and TypeScript declarations.
 
 ## Install from source
 
@@ -9,6 +9,27 @@ From the consuming project:
 
 ```sh
 npm install /path/to/curtail-str/packages/node
+```
+
+## Browser / CDN
+
+The package includes minified UMD (`dist/curtail-str.min.js`) and ESM
+(`dist/curtail-str.min.mjs`) bundles for direct browser and CDN usage (cdnjs,
+jsDelivr, unpkg):
+
+```html
+<!-- UMD global (window.curtailStr) -->
+<script src="https://cdn.jsdelivr.net/npm/curtail-str/dist/curtail-str.min.js"></script>
+<script>
+  const { curtailStr } = window.curtailStr;
+  console.log(curtailStr('active-customer-code-in-the-stock'));
+</script>
+
+<!-- ESM module -->
+<script type="module">
+  import { curtailStr } from 'https://cdn.jsdelivr.net/npm/curtail-str/dist/curtail-str.min.mjs';
+  console.log(curtailStr('active-customer-code-in-the-stock'));
+</script>
 ```
 
 ## Usage

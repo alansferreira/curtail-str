@@ -30,13 +30,19 @@ function update() {
       options.preserveWordLength = document.querySelector('#preserve').valueAsNumber;
       options.maxWordLength = document.querySelector('#maximum').valueAsNumber;
     }
-    const output = curtailStr(input.value, options);
-    result.textContent = output || '(empty result)';
-    const before = Array.from(input.value).length;
-    const after = Array.from(output).length;
-    stats.textContent = `${before} input / ${after} output code points`;
-    snippet.textContent = 'import { curtailStr } from "curtail-str";\n\n' +
-      `curtailStr(${JSON.stringify(input.value)}, ${JSON.stringify(options, null, 2)});`;
+    const lines = input.value.split(/\r?\n/).filter(line => line.trim() !== '');
+    const outputs = lines.map(line => curtailStr(line, options));
+    const output = outputs.join('\n');
+    result.textContent = outputs.length ? outputs.map(item => item || '(empty result)').join('\n') : '(empty result)';
+    const before = lines.reduce((sum, line) => sum + Array.from(line).length, 0);
+    const after = outputs.reduce((sum, item) => sum + Array.from(item).length, 0);
+    const lineLabel = lines.length === 1 ? '1 line' : `${lines.length} lines`;
+    stats.textContent = `${lineLabel} · ${before} input / ${after} output code points`;
+    const callCode = lines.length <= 1
+      ? `curtailStr(${JSON.stringify(lines[0] ?? '')}, ${JSON.stringify(options, null, 2)});`
+      : `const options = ${JSON.stringify(options, null, 2)};\n` +
+        `${JSON.stringify(lines, null, 2)}.map(line => curtailStr(line, options));`;
+    snippet.textContent = 'import { curtailStr } from "curtail-str";\n\n' + callCode;
     error.hidden = true;
     error.textContent = '';
   } catch (cause) {

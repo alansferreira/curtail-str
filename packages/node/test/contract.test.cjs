@@ -31,8 +31,32 @@ test('invalid dynamic types', () => {
 
 test('ESM and CommonJS exports', async () => {
   const esm = await import('curtail-str');
+  const minEsm = await import('curtail-str/curtail-str.min.mjs');
+  const minUmd = require('../dist/curtail-str.min.js');
   assert.equal(esm.curtailStr('codigo'), 'cdg');
+  assert.equal(minEsm.curtailStr('codigo-do-cliente'), 'cdg-clnt');
+  assert.equal(minUmd.curtailStr('codigo-do-cliente'), 'cdg-clnt');
   assert.equal(shorten(undefined), '');
+});
+
+test('UMD browser global and AMD exports', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const vm = require('node:vm');
+  const code = fs.readFileSync(path.join(__dirname, '../dist/curtail-str.min.js'), 'utf8');
+
+  const browserContext = vm.createContext({});
+  vm.runInContext(code, browserContext);
+  assert.equal(browserContext.curtailStr.curtailStr('codigo-do-cliente'), 'cdg-clnt');
+
+  let amdExport;
+  const define = (deps, factory) => {
+    amdExport = factory();
+  };
+  define.amd = true;
+  const amdContext = vm.createContext({ define });
+  vm.runInContext(code, amdContext);
+  assert.equal(amdExport.curtailStr('codigo-do-cliente'), 'cdg-clnt');
 });
 
 test('prototype-like keys are ordinary entries', () => {

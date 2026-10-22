@@ -22,9 +22,6 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
       - uses: actions/setup-go@v5
         with:
           go-version: '1.26.x'
@@ -37,12 +34,14 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          RELEASE_VERSION=$(python scripts/release.py version)
+          RELEASE_VERSION=$(make version)
           make release-check CONFIRM="$RELEASE_VERSION"
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
-      - name: Test Go module and release tooling
-        run: make test-go test-release
+      - name: Test Go module
+        run: make test-go
       - name: Build Go module
         run: make build-go
       - name: Publish Go module tags
-        run: python scripts/release.py publish go --confirm "$RELEASE_VERSION"
+        run: |
+          make push-tags CONFIRM="$RELEASE_VERSION"
+          echo "Go version published by tag: packages/go/v$RELEASE_VERSION"
