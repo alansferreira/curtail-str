@@ -7,6 +7,7 @@ RELEASE_PYTHON ?= .venv-release/bin/python
 
 .DEFAULT_GOAL := help
 .NOTPARALLEL:
+.PHONY: build-playground test-playground
 .PHONY: help setup-release version check-version bump test test-release test-node test-python test-go test-java test-shell build build-node build-python build-go build-java build-shell release-check tag publish publish-node publish-python publish-java publish-go
 
 help:
@@ -16,6 +17,7 @@ help:
 	  'make bump VERSION=X.Y.Z             Set a newer stable version explicitly' \
 	  'make test / make build              Verify / build all packages' \
 	  'make test-node / make build-node    Select node, python, go, java, or shell' \
+	  'make test-playground                Build and test the browser playground' \
 	  'make tag CONFIRM=X.Y.Z              Create local release tags on a clean commit' \
 	  'make publish CONFIRM=X.Y.Z          Test, build, push tags, publish all runtimes' \
 	  'make publish-node CONFIRM=X.Y.Z     Publish one runtime (python/java/go also available)'
@@ -70,6 +72,12 @@ build-java:
 
 build-shell:
 	$(PYTHON) scripts/package_shell.py
+
+build-playground:
+	node scripts/build_playground.mjs
+
+test-playground: build-playground
+	node --test scripts/tests/playground.test.mjs
 
 release-check:
 	$(PYTHON) scripts/release.py preflight --confirm "$(CONFIRM)"
