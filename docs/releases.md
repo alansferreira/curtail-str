@@ -112,9 +112,14 @@ public key server. Unlock it with a GPG agent or provide `MAVEN_GPG_PASSPHRASE`
 through a protected environment. Signing uses Maven GPG Plugin best-practice
 mode; do not put the passphrase on the command line.
 
-If signing fails with `gpg: signing failed: No pinentry`, the batch/loopback
-signer may be unable to obtain the passphrase. An installed pinentry program
-alone does not guarantee a prompt in this mode. In a local Bash terminal, read
+Java publication runs Maven interactively, allowing GPG agent to request the
+passphrase through pinentry. Install a working pinentry program; in a Unix
+terminal, set `export GPG_TTY="$(tty)"` before publishing. The profile does not
+force loopback mode. Maven GPG Plugin enables loopback automatically when
+`MAVEN_GPG_PASSPHRASE` is provided.
+
+For a headless environment or an unavailable pinentry prompt, use a secret
+manager to supply that variable. In a local Bash terminal, you can instead read
 the passphrase without echoing or saving it in shell history, then test signing
 without uploading:
 
@@ -122,7 +127,7 @@ without uploading:
 read -r -s -p "GPG passphrase: " MAVEN_GPG_PASSPHRASE
 printf '\n'
 export MAVEN_GPG_PASSPHRASE
-mvn -B -ntp -f packages/java/pom.xml -Prelease clean verify
+mvn -ntp -f packages/java/pom.xml -Prelease clean verify
 unset MAVEN_GPG_PASSPHRASE
 ```
 
@@ -140,7 +145,7 @@ The ordinary build does not activate signing or upload.
 To inspect release artifacts without uploading:
 
 ```sh
-mvn -B -ntp -f packages/java/pom.xml -Prelease verify
+mvn -ntp -f packages/java/pom.xml -Prelease verify
 ```
 
 This requires a usable signing key but does not invoke `deploy`.
@@ -177,6 +182,8 @@ Replace `0.1.2` with the current version. The tags are:
 - `vX.Y.Z` for the overall release.
 - `packages/go/vX.Y.Z` for the Go module in its repository subdirectory.
 
+Java publication verifies signed release artifacts before creating or pushing
+tags, so signing failures do not trigger those remote mutations.
 After local checks, publication creates any missing tags and pushes both tags
 atomically. It then uploads npm, PyPI, and Maven Central artifacts. Go is
 published by the subdirectory tag and may take time to appear through proxies.

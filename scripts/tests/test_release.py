@@ -193,9 +193,34 @@ class ReleaseTest(unittest.TestCase):
                 *map(str, release.python_artifacts(version)),
             )
             command.assert_any_call(
-                "/tools/mvn", "-B", "-ntp", "-s", "scripts/maven-settings.xml",
-                "-f", "packages/java/pom.xml", "-Prelease", "clean", "deploy",
+                "/tools/mvn", "-ntp", "-s", "scripts/maven-settings.xml",
+                "-f", "packages/java/pom.xml", "-Prelease", "deploy",
             )
+            calls = [call.args for call in command.call_args_list]
+            signing = calls.index((
+                "/tools/mvn", "-ntp", "-f", "packages/java/pom.xml",
+                "-Prelease", "clean", "verify",
+            ))
+            pushing = next(index for index, args in enumerate(calls) if args[:2] == ("git", "push"))
+            self.assertLess(signing, pushing)
+
+    def test_failed_java_signing_does_not_push(self):
+        def run(*args, **kwargs):
+            if args[0] == "gpg":
+                return "sec:test-key"
+            if args[0] == "mvn":
+                raise subprocess.CalledProcessError(2, args)
+            return ""
+
+        with patch.object(release, "preflight", return_value=release.current_version()), \
+                patch.object(release.shutil, "which", return_value="/tools/mvn"), \
+                patch.object(release, "run", side_effect=run) as command, \
+                patch.object(release, "create_tags") as tags, \
+                patch.dict(os.environ, {"CENTRAL_USERNAME": "test", "CENTRAL_PASSWORD": "test"}):
+            with self.assertRaises(subprocess.CalledProcessError):
+                release.publish("java", release.current_version(), "mvn")
+            tags.assert_not_called()
+            self.assertFalse(any(call.args[:2] == ("git", "push") for call in command.call_args_list))
 
     def test_missing_signing_key_does_not_push(self):
         with patch.object(release, "preflight", return_value=release.current_version()), \

@@ -207,6 +207,7 @@ def publish(runtime: str, confirm: str, mvn: str) -> None:
         keys = run("gpg", "--list-secret-keys", "--with-colons", capture=True)
         if not any(line.startswith("sec:") for line in keys.splitlines()):
             raise ValueError("A GPG secret key is required for Maven Central signing")
+        run(mvn, "-ntp", "-f", "packages/java/pom.xml", "-Prelease", "clean", "verify")
     reuse_remote_tags(version)
     create_tags(version)
     run("git", "push", "--atomic", "origin", *(f"refs/tags/{tag}" for tag in tags(version)))
@@ -220,8 +221,8 @@ def publish(runtime: str, confirm: str, mvn: str) -> None:
             "--repository-url", "https://upload.pypi.org/legacy/",
             *map(str, python_artifacts(version)))
     if "java" in selected:
-        run(mvn, "-B", "-ntp", "-s", "scripts/maven-settings.xml",
-            "-f", "packages/java/pom.xml", "-Prelease", "clean", "deploy")
+        run(mvn, "-ntp", "-s", "scripts/maven-settings.xml",
+            "-f", "packages/java/pom.xml", "-Prelease", "deploy")
 
 
 def main() -> None:
