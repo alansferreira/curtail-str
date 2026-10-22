@@ -190,7 +190,7 @@ publish: release-check test build
 	$(MVN) -ntp -f packages/java/pom.xml -Prelease clean verify; \
 	$(MAKE) --no-print-directory push-tags CONFIRM="$(CONFIRM)"; \
 	echo "Go version published by tag: packages/go/v$$version"; \
-	npm publish "packages/node/dist/curtail-str-$$version.tgz" --access=public --registry=https://registry.npmjs.org/; \
+	npm stage publish "packages/node/dist/curtail-str-$$version.tgz" --access=public --registry=https://registry.npmjs.org/; \
 	$(RELEASE_PYTHON) -m twine upload --non-interactive \
 		--repository-url https://upload.pypi.org/legacy/ \
 		"packages/python/dist/curtail_str-$$version-py3-none-any.whl" \
@@ -202,7 +202,7 @@ publish-node: release-check test-node build-node
 	test -f "packages/node/dist/curtail-str-$$version.tgz" || { echo "Build the npm tarball first" >&2; exit 1; }; \
 	npm whoami --registry=https://registry.npmjs.org/; \
 	$(MAKE) --no-print-directory push-tags CONFIRM="$(CONFIRM)"; \
-	npm publish "packages/node/dist/curtail-str-$$version.tgz" --access=public --registry=https://registry.npmjs.org/
+	npm stage publish "packages/node/dist/curtail-str-$$version.tgz" --access=public --registry=https://registry.npmjs.org/
 
 publish-python: release-check test-python build-python
 	@version=$$(tr -d '\r\n' < VERSION); \

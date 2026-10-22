@@ -82,9 +82,8 @@ Never store tokens, signing keys, or passwords in the repository.
 
 Authenticate with `npm login --registry=https://registry.npmjs.org/` or configure
 a suitable token in your user npm configuration. Publication uses the public
-npm registry and performs `npm whoami` before upload.
-Meet the account's 2FA requirements; for automation use an appropriately scoped
-token and the registry-supported policy for that token.
+npm registry, performs `npm whoami` before upload, and stages the package with
+`npm stage publish` (requires npm 11.15.0+) for subsequent 2FA approval.
 
 ### PyPI
 
@@ -232,7 +231,7 @@ by your GitHub plan. Add the following environment secrets:
 
 | Secret | Required for | Value |
 | --- | --- | --- |
-| `NPM_TOKEN` | Node.js | npm publish token with the required automation/2FA permissions |
+| `NPM_TOKEN` | Node.js | npm token with permission to stage packages for `curtail-str` |
 | `PYPI_TOKEN` | Python | PyPI API token, including the `pypi-` prefix |
 | `CENTRAL_USERNAME` | Java | Central Portal publisher-token username |
 | `CENTRAL_PASSWORD` | Java | Central Portal publisher-token password |

@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: '22'
           registry-url: https://registry.npmjs.org/
+      - name: Upgrade npm for staged publishing
+        run: npm install -g npm@latest
       - name: Validate release
         run: |
           if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
