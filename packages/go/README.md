@@ -59,4 +59,4 @@ The heuristic does not translate words or guarantee uniqueness. By default,
 Run `go test -race ./...` and `go vet ./...` from this directory.
 Tests use fixtures at the repository root; consumers do not depend on them.
 
-See the [algorithm contract](../../spec/algorithm.md) for complete semantics.
+See the [algorithm contract](https://github.com/alansferreira/curtail-str/blob/main/spec/algorithm.md) for complete semantics.

@@ -3,11 +3,12 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+.venv-release/
 build/
 dist/
 !packages/shell/dist/
 packages/shell/dist/*
-!packages/shell/dist/curtail-str-shell-0.1.0.tar.gz
-!packages/shell/dist/curtail-str-shell-0.1.0.zip
+!packages/shell/dist/curtail-str-shell-*.tar.gz
+!packages/shell/dist/curtail-str-shell-*.zip
 !packages/shell/dist/SHA256SUMS
 target/

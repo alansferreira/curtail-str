@@ -16,8 +16,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[3]
 DIST = ROOT / "packages/shell/dist"
-NAME = "curtail-str-shell-0.1.0"
-FILES = {"curtail-str.sh", "curtail-str.bat", "curtail-str.ps1", "README.md"}
+NAME = f"curtail-str-shell-{(ROOT / 'VERSION').read_text().strip()}"
+FILES = {"curtail-str.sh", "curtail-str.bat", "curtail-str.ps1", "README.md", "LICENSE"}
 
 
 class DistributionTest(unittest.TestCase):
@@ -38,6 +38,11 @@ class DistributionTest(unittest.TestCase):
                 data = archive.read(f"{NAME}/{name}")
                 self.assertIn(b"\r\n", data)
                 self.assertNotIn(b"\n", data.replace(b"\r\n", b""))
+
+    def test_reproducible_archives(self):
+        before = (DIST / "SHA256SUMS").read_bytes()
+        subprocess.run([sys.executable, str(ROOT / "scripts/package_shell.py")], check=True)
+        self.assertEqual(before, (DIST / "SHA256SUMS").read_bytes())
 
     @unittest.skipUnless(os.name != "nt" and shutil.which("curl"), "Requires POSIX and curl")
     def test_http_download_and_standalone_execution(self):

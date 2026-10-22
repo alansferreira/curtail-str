@@ -48,4 +48,4 @@ Run `npm ci`, `npm test`, `npm run typecheck`, and
 `node test/package-smoke.cjs` from this directory. Contract tests use fixtures
 at the repository root; the installed package does not depend on them.
 
-See the [algorithm contract](../../spec/algorithm.md) for complete semantics.
+See the [algorithm contract](https://github.com/alansferreira/curtail-str/blob/main/spec/algorithm.md) for complete semantics.

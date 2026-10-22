@@ -1,7 +1,16 @@
 {
   "name": "curtail-str",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pure, configurable identifier abbreviation without dictionaries",
+  "license": "MIT",
+  "author": "Alan Ferreira",
+  "homepage": "https://github.com/alansferreira/curtail-str",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alansferreira/curtail-str.git",
+    "directory": "packages/node"
+  },
+  "publishConfig": {"access": "public", "registry": "https://registry.npmjs.org/"},
   "engines": {"node": ">=22"},
   "main": "./index.cjs",
   "types": "./index.d.cts",
@@ -11,7 +20,7 @@
       "require": {"types": "./index.d.cts", "default": "./index.cjs"}
     }
   },
-  "files": ["index.cjs", "index.mjs", "index.d.cts", "index.d.mts"],
+  "files": ["index.cjs", "index.mjs", "index.d.cts", "index.d.mts", "LICENSE"],
   "scripts": {
     "test": "node --test test/*.test.cjs",
     "typecheck": "tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 test/consumer.mts test/consumer.cts"

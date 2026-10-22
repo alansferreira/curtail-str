@@ -4,7 +4,7 @@ Compatible with Eclipse Temurin Java 8 or later. No runtime dependencies.
 
 ## Install from source
 
-Install `org.alf:curtail-str:0.1.0` into the local Maven repository:
+Install `io.github.alansferreira:curtail-str:0.1.1` into the local Maven repository:
 
 ```sh
 mvn -B -ntp -f /path/to/curtail-str/packages/java/pom.xml install
@@ -46,7 +46,7 @@ not UTF-16 units.
 ## Development
 
 Run `mvn -B -ntp verify` from this directory.
-The output JAR is `target/curtail-str-0.1.0.jar`.
+The output JAR is `target/curtail-str-0.1.1.jar`.
 Tests use fixtures at the repository root; the JAR does not depend on them.
 
-See the [algorithm contract](../../spec/algorithm.md) for complete semantics.
+See the [algorithm contract](https://github.com/alansferreira/curtail-str/blob/main/spec/algorithm.md) for complete semantics.

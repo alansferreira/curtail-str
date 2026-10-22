@@ -9,6 +9,15 @@ permissions:
   contents: read
 
 jobs:
+  release-tooling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: make check-version test-release
+
   shell:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -105,5 +114,6 @@ jobs:
       - name: Consume JAR without test or runtime dependencies
         run: |
           mkdir "$RUNNER_TEMP/java-consumer"
-          javac -cp packages/java/target/curtail-str-0.1.0.jar -d "$RUNNER_TEMP/java-consumer" packages/java/src/test/smoke/Consumer.java
-          java -cp "packages/java/target/curtail-str-0.1.0.jar:$RUNNER_TEMP/java-consumer" Consumer
+          version=$(cat VERSION)
+          javac -cp "packages/java/target/curtail-str-$version.jar" -d "$RUNNER_TEMP/java-consumer" packages/java/src/test/smoke/Consumer.java
+          java -cp "packages/java/target/curtail-str-$version.jar:$RUNNER_TEMP/java-consumer" Consumer

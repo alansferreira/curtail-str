@@ -47,4 +47,4 @@ Install with `python -m pip install -e .` and run
 Contract tests require the fixtures at the repository root; the installed
 package does not depend on them.
 
-See the [algorithm contract](../../spec/algorithm.md) for complete semantics.
+See the [algorithm contract](https://github.com/alansferreira/curtail-str/blob/main/spec/algorithm.md) for complete semantics.
