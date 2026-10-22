@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.alansferreira</groupId>
   <artifactId>curtail-str</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
   <name>Curtail-str</name>
   <description>Pure, configurable identifier abbreviation without dictionaries</description>
   <url>https://github.com/alansferreira/curtail-str</url>
