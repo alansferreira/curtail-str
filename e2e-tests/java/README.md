@@ -34,7 +34,7 @@ mvn -f e2e-tests/java/pom.xml clean
 ### Saída esperada
 
 ```text
-Universal: actv-cstm-cd-the-stck
-Custom: cstm-cdg
-Configurable: cs
+Universal: active-customer-code-in-the-stock -> actv-cstm-cd-the-stck
+Custom: customer-code -> cstm-cdg
+Configurable: customer -> cs
 ```
