@@ -1,0 +1,57 @@
+name: Verify GitHub Action
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  action:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test github-action/test/action.test.cjs
+      - name: Shorten one value
+        id: single
+        uses: ./github-action
+        with:
+          text: active-customer-code-in-the-stock
+      - name: Shorten JSON values
+        id: json
+        uses: ./github-action
+        with:
+          texts: '["customer-code", "code", "in"]'
+          mode: custom
+          replacements: '{"code":"cdg"}'
+      - name: Shorten line-separated values
+        id: lines
+        uses: ./github-action
+        with:
+          texts: |
+            customer
+            code
+            in
+          mode: configurable
+          min-word-length: '1'
+          preserve-word-length: '1'
+          max-word-length: '2'
+      - name: Verify action outputs
+        shell: bash
+        env:
+          SINGLE: ${{ steps.single.outputs.result }}
+          JSON_RESULTS: ${{ steps.json.outputs.results }}
+          LINE_RESULTS: ${{ steps.lines.outputs.results }}
+        run: |
+          test "$SINGLE" = 'actv-cstm-cd-the-stck'
+          test "$JSON_RESULTS" = '["cstm-cdg","cdg",""]'
+          test "$LINE_RESULTS" = '["cs","cd","in"]'

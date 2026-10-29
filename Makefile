@@ -8,7 +8,7 @@ REPOSITORY := https://github.com/alansferreira/curtail-str
 
 .DEFAULT_GOAL := help
 .NOTPARALLEL:
-.PHONY: build-playground test-playground
+.PHONY: build-playground test-playground test-action
 .PHONY: help setup-release version check-version bump test test-node test-python test-go test-java test-shell build build-node build-python build-go build-java build-shell release-check tag push-tags publish publish-node publish-python publish-java publish-go
 
 help:
@@ -19,6 +19,7 @@ help:
 	  'make test / make build              Verify / build all packages' \
 	  'make test-node / make build-node    Select node, python, go, java, or shell' \
 	  'make test-playground                Build and test the browser playground' \
+	  'make test-action                    Test the reusable GitHub Action' \
 	  'make tag CONFIRM=X.Y.Z              Create local release tags on a clean commit' \
 	  'make publish CONFIRM=X.Y.Z          Test, build, push tags, publish all runtimes' \
 	  'make publish-node CONFIRM=X.Y.Z     Publish one runtime (python/java/go also available)'
@@ -79,7 +80,10 @@ bump: check-version
 	$(MAKE) --no-print-directory check-version; \
 	echo "Version updated: $$old -> $$new. Review and commit before tagging."
 
-test: check-version test-node test-python test-go test-java test-shell
+test: check-version test-node test-python test-go test-java test-shell test-action
+
+test-action:
+	node --test github-action/test/action.test.cjs
 
 test-node:
 	cd packages/node && npm test && npm run typecheck && node test/package-smoke.cjs

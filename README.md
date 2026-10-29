@@ -109,6 +109,12 @@ of each script without creating files. MD5 is not an authenticity guarantee.
 Replace `main` with a commit SHA or tag to pin an immutable revision.
 The package guide includes curl, wget, and Invoke-WebRequest examples.
 
+## GitHub Action
+
+The [reusable GitHub Action](./github-action/README.md) shortens single values
+or ordered batches with JSON-first and line-separated input. Its implementation,
+tests, usage examples, and development guide live in [github-action/](./github-action/).
+
 ## Development and verification
 
 The [release guide](./docs/releases.md) documents `make bump`, `make test`,
@@ -145,6 +151,7 @@ mvn -B -ntp -f packages/java/pom.xml verify
 # Shell distribution
 python3 scripts/package_shell.py
 python3 -m unittest discover -s packages/shell/tests -v
+
 ```
 
 All library test runners read the same fixtures, including error cases.
@@ -155,7 +162,8 @@ The [CI workflow](./.github/workflows/ci.yml) covers Node.js 22/24/26,
 Python 3.11 through 3.15, Go 1.26/1.27, and Temurin 8/11/17/21/25/27.
 It also checks installed npm and Python distributions, an external Go
 consumer, a standalone JAR consumer, and shell scripts on Linux, macOS,
-and Windows.
+and Windows. The [action CI](./.github/workflows/ci-action.yml) separately tests
+the reusable GitHub Action on all three systems.
 
 ## Support policy
 

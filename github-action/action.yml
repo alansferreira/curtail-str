@@ -1,0 +1,36 @@
+name: curtail-str
+description: Shorten one or multiple identifiers with the curtail-str algorithm.
+author: Alan Ferreira
+branding:
+  icon: scissors
+  color: blue
+
+inputs:
+  text:
+    description: Single string to shorten. Mutually exclusive with texts.
+  texts:
+    description: Multiple strings as a JSON array or one value per line.
+  texts-format:
+    description: 'Batch format: auto (JSON first), json, or lines.'
+    default: auto
+  mode:
+    description: 'Abbreviation mode: universal, custom, or configurable.'
+    default: universal
+  replacements:
+    description: JSON object of literal word replacements (custom or configurable mode).
+  min-word-length:
+    description: Minimum word length (configurable mode only).
+  preserve-word-length:
+    description: Maximum preserved word length (configurable mode only).
+  max-word-length:
+    description: Maximum compressed word length (configurable mode only).
+
+outputs:
+  result:
+    description: Abbreviated string when using text.
+  results:
+    description: JSON array of abbreviated strings in input order when using texts.
+
+runs:
+  using: node24
+  main: index.cjs

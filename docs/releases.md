@@ -58,6 +58,11 @@ make build
 Select individual runtimes with `test-node`, `test-python`, `test-go`,
 `test-java`, `build-node`, `build-python`, `build-go`, or `build-java`.
 `test-shell` and `build-shell` cover the standalone shell distribution.
+`test-action` covers the reusable [GitHub Action](../github-action/README.md) and is
+included in `make test`. The action executes checked-in source directly and
+requires no separate build or registry publication. Once a release commit
+includes the action metadata, its `vX.Y.Z` tag can be used as
+`uses: alansferreira/curtail-str/github-action@vX.Y.Z`.
 
 Build outputs:
 
