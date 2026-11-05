@@ -83,7 +83,7 @@ python -m pip install /path/to/curtail-str/packages/python
 go mod edit -replace github.com/alansferreira/curtail-str/packages/go=/path/to/curtail-str/packages/go
 go get github.com/alansferreira/curtail-str/packages/go
 
-# Java: install io.github.alansferreira:curtail-str:0.1.8 in the local Maven repository
+# Java: install io.github.alansferreira:curtail-str:0.1.9 in the local Maven repository
 mvn -B -ntp -f /path/to/curtail-str/packages/java/pom.xml install
 ```
 
