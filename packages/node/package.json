@@ -7,7 +7,7 @@
   "homepage": "https://github.com/alansferreira/curtail-str",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alansferreira/curtail-str.git",
+    "url": "https://github.com/alansferreira/curtail-str.git",
     "directory": "packages/node"
   },
   "publishConfig": {
